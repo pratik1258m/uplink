@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { AppImages } from '../assets/images';
 import { SphereCenterIcon, SphereAura } from '../assets/svgs';
@@ -32,6 +33,26 @@ export const LanguageSelectionScreen: React.FC<LanguageSelectionScreenProps> = (
   onNext,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.06,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 0.96,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    pulse.start();
+    return () => pulse.stop();
+  }, [pulseAnim]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -50,14 +71,25 @@ export const LanguageSelectionScreen: React.FC<LanguageSelectionScreenProps> = (
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
-        {/* Glowing AI Sphere Hero */}
+        {/* Glowing AI Sphere Hero with Breathing Pulse Animation */}
         <View style={styles.sphereContainer}>
-          <View style={styles.auraWrapper}>
+          <Animated.View
+            style={[
+              styles.auraWrapper,
+              {
+                transform: [{ scale: pulseAnim }],
+              },
+            ]}>
             <SphereAura width={340} height={340} />
-          </View>
-          <Image
+          </Animated.View>
+          <Animated.Image
             source={AppImages.aiSphere}
-            style={styles.aiSphereImage}
+            style={[
+              styles.aiSphereImage,
+              {
+                transform: [{ scale: pulseAnim }],
+              },
+            ]}
             resizeMode="contain"
           />
           <View style={styles.sphereIconOverlay}>
@@ -145,10 +177,10 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
     color: '#000000',
-    letterSpacing: -0.3,
+    letterSpacing: -0.32,
   },
   headerPlaceholder: {
     width: 36,

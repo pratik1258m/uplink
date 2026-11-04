@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Image,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { AppImages } from '../assets/images';
 import { SphereCenterIcon, SphereAura } from '../assets/svgs';
@@ -20,6 +20,27 @@ export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
   onBack,
   onNext,
 }) => {
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.06,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 0.96,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    pulse.start();
+    return () => pulse.stop();
+  }, [pulseAnim]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
@@ -36,14 +57,25 @@ export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
       </View>
 
       <View style={styles.container}>
-        {/* Glowing AI Sphere Hero */}
+        {/* Glowing AI Sphere Hero with Breathing Pulse Animation */}
         <View style={styles.sphereContainer}>
-          <View style={styles.auraWrapper}>
+          <Animated.View
+            style={[
+              styles.auraWrapper,
+              {
+                transform: [{ scale: pulseAnim }],
+              },
+            ]}>
             <SphereAura width={340} height={340} />
-          </View>
-          <Image
+          </Animated.View>
+          <Animated.Image
             source={AppImages.aiSphere}
-            style={styles.aiSphereImage}
+            style={[
+              styles.aiSphereImage,
+              {
+                transform: [{ scale: pulseAnim }],
+              },
+            ]}
             resizeMode="contain"
           />
           <View style={styles.sphereIconOverlay}>
@@ -58,7 +90,7 @@ export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
           </Text>
         </View>
 
-        {/* Bottom Next Button & Home Indicator */}
+        {/* Bottom Next Button */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.nextButton}

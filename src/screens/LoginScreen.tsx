@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Dimensions,
+  Animated,
 } from 'react-native';
 import {
   GrayEclipseBg,
@@ -18,13 +18,32 @@ import {
   Graphics1,
 } from '../assets/svgs';
 
-const { width } = Dimensions.get('window');
-
 interface LoginScreenProps {
   onContinue: () => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const float = Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -6,
+          duration: 1800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 1800,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    float.start();
+    return () => float.stop();
+  }, [floatAnim]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
@@ -46,23 +65,43 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
             <UpplinkLogo width={178} height={178} />
           </View>
 
-          {/* Graphics 3 - Top Right Purple Gradient Badge */}
-          <View style={styles.graphics3Container}>
+          {/* Graphics 3 - Floating Top Right Purple Gradient Badge */}
+          <Animated.View
+            style={[
+              styles.graphics3Container,
+              {
+                transform: [{ translateY: floatAnim }, { rotate: '20.9deg' }],
+              },
+            ]}>
             <View style={styles.graphics3Outer}>
               <View style={styles.graphics3Inner}>
                 <EditIcon width={18} height={18} />
               </View>
             </View>
-          </View>
+          </Animated.View>
 
-          {/* Graphics 2 - Bottom Right Mint/Cyan Diamond Badge */}
-          <View style={styles.graphics2Container}>
+          {/* Graphics 2 - Floating Bottom Right Mint/Cyan Diamond Badge */}
+          <Animated.View
+            style={[
+              styles.graphics2Container,
+              {
+                transform: [
+                  {
+                    translateY: floatAnim.interpolate({
+                      inputRange: [-6, 0],
+                      outputRange: [0, -6],
+                    }),
+                  },
+                  { rotate: '45deg' },
+                ],
+              },
+            ]}>
             <View style={styles.graphics2Outer}>
               <View style={styles.graphics2Inner}>
                 <Graphics2Icon width={18} height={12} />
               </View>
             </View>
-          </View>
+          </Animated.View>
         </View>
 
         {/* Title and Tagline */}
@@ -150,7 +189,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     top: 15,
-    transform: [{ rotate: '20.9deg' }],
   },
   graphics3Outer: {
     width: 60,
@@ -177,7 +215,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 28,
     bottom: 30,
-    transform: [{ rotate: '45deg' }],
   },
   graphics2Outer: {
     width: 64,

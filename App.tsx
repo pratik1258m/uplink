@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,121 +14,60 @@ import { AppSelectionScreen } from './src/screens/AppSelectionScreen';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-type ScreenStep = 'login' | 'language' | 'know_you' | 'app_selection';
-
-const STEP_ORDER: ScreenStep[] = ['login', 'language', 'know_you', 'app_selection'];
-
 function App() {
-  const [currentStep, setCurrentStep] = useState<ScreenStep>('login');
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const translateX = useRef(new Animated.Value(0)).current;
 
-  const transitionToStep = (newStep: ScreenStep, direction: 'forward' | 'backward' = 'forward') => {
-    const initialSlide = direction === 'forward' ? SCREEN_WIDTH * 0.35 : -SCREEN_WIDTH * 0.35;
-    
-    // Animate out current
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 120,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: direction === 'forward' ? -SCREEN_WIDTH * 0.15 : SCREEN_WIDTH * 0.15,
-        duration: 120,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      // Set new screen
-      setCurrentStep(newStep);
-      slideAnim.setValue(initialSlide);
-
-      // Animate in new screen
-      Animated.parallel([
-        Animated.spring(slideAnim, {
-          toValue: 0,
-          friction: 8,
-          tension: 65,
-          useNativeDriver: true,
-        }),
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 220,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    });
-  };
-
-  const handleLoginContinue = () => {
-    transitionToStep('language', 'forward');
-  };
-
-  const handleLanguageBack = () => {
-    transitionToStep('login', 'backward');
-  };
-
-  const handleLanguageNext = () => {
-    transitionToStep('know_you', 'forward');
-  };
-
-  const handleKnowYouBack = () => {
-    transitionToStep('language', 'backward');
-  };
-
-  const handleKnowYouNext = () => {
-    transitionToStep('app_selection', 'forward');
-  };
-
-  const handleAppSelectionBack = () => {
-    transitionToStep('know_you', 'backward');
-  };
-
-  const handleFinish = () => {
-    transitionToStep('login', 'forward');
-  };
-
-  const renderCurrentScreen = () => {
-    switch (currentStep) {
-      case 'login':
-        return <LoginScreen onContinue={handleLoginContinue} />;
-      case 'language':
-        return (
-          <LanguageSelectionScreen
-            onBack={handleLanguageBack}
-            onNext={handleLanguageNext}
-          />
-        );
-      case 'know_you':
-        return (
-          <KnowYouBetterScreen
-            onBack={handleKnowYouBack}
-            onNext={handleKnowYouNext}
-          />
-        );
-      case 'app_selection':
-        return (
-          <AppSelectionScreen
-            onBack={handleAppSelectionBack}
-            onFinish={handleFinish}
-          />
-        );
-    }
+  const navigateTo = (index: number) => {
+    setCurrentStepIndex(index);
+    Animated.spring(translateX, {
+      toValue: -index * SCREEN_WIDTH,
+      tension: 65,
+      friction: 11,
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" />
       <View style={styles.root}>
+        {/* Continuous Horizontal Sliding Pager */}
         <Animated.View
           style={[
-            styles.animatedContainer,
+            styles.sliderTrack,
             {
-              opacity: fadeAnim,
-              transform: [{ translateX: slideAnim }],
+              transform: [{ translateX }],
             },
           ]}>
-          {renderCurrentScreen()}
+          {/* Screen 0: Login */}
+          <View style={styles.screenSlide}>
+            <LoginScreen onContinue={() => navigateTo(1)} />
+          </View>
+
+          {/* Screen 1: Language Selection */}
+          <View style={styles.screenSlide}>
+            <LanguageSelectionScreen
+              onBack={() => navigateTo(0)}
+              onNext={() => navigateTo(2)}
+            />
+          </View>
+
+          {/* Screen 2: Know You Better */}
+          <View style={styles.screenSlide}>
+            <KnowYouBetterScreen
+              onBack={() => navigateTo(1)}
+              onNext={() => navigateTo(3)}
+            />
+          </View>
+
+          {/* Screen 3: App Selection */}
+          <View style={styles.screenSlide}>
+            <AppSelectionScreen
+              onBack={() => navigateTo(2)}
+              onFinish={() => navigateTo(0)}
+            />
+          </View>
         </Animated.View>
       </View>
     </SafeAreaProvider>
@@ -139,8 +78,15 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
   },
-  animatedContainer: {
+  sliderTrack: {
+    flex: 1,
+    flexDirection: 'row',
+    width: SCREEN_WIDTH * 4,
+  },
+  screenSlide: {
+    width: SCREEN_WIDTH,
     flex: 1,
   },
 });
