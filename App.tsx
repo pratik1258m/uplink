@@ -4,7 +4,7 @@ import {
   StyleSheet,
   StatusBar,
   Animated,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { LoginScreen } from './src/screens/LoginScreen';
@@ -12,18 +12,18 @@ import { LanguageSelectionScreen } from './src/screens/LanguageSelectionScreen';
 import { KnowYouBetterScreen } from './src/screens/KnowYouBetterScreen';
 import { AppSelectionScreen } from './src/screens/AppSelectionScreen';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 function App() {
+  const { width: screenWidth } = useWindowDimensions();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const translateX = useRef(new Animated.Value(0)).current;
 
   const navigateTo = (index: number) => {
     setCurrentStepIndex(index);
     Animated.spring(translateX, {
-      toValue: -index * SCREEN_WIDTH,
-      tension: 65,
-      friction: 11,
+      toValue: -index * screenWidth,
+      damping: 18,
+      stiffness: 110,
+      mass: 0.8,
       useNativeDriver: true,
     }).start();
   };
@@ -32,21 +32,22 @@ function App() {
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" />
       <View style={styles.root}>
-        {/* Continuous Horizontal Sliding Pager */}
+        {/* Continuous Horizontal Sliding Pager with Precision Springs */}
         <Animated.View
           style={[
             styles.sliderTrack,
             {
+              width: screenWidth * 4,
               transform: [{ translateX }],
             },
           ]}>
           {/* Screen 0: Login */}
-          <View style={styles.screenSlide}>
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
             <LoginScreen onContinue={() => navigateTo(1)} />
           </View>
 
           {/* Screen 1: Language Selection */}
-          <View style={styles.screenSlide}>
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
             <LanguageSelectionScreen
               onBack={() => navigateTo(0)}
               onNext={() => navigateTo(2)}
@@ -54,7 +55,7 @@ function App() {
           </View>
 
           {/* Screen 2: Know You Better */}
-          <View style={styles.screenSlide}>
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
             <KnowYouBetterScreen
               onBack={() => navigateTo(1)}
               onNext={() => navigateTo(3)}
@@ -62,7 +63,7 @@ function App() {
           </View>
 
           {/* Screen 3: App Selection */}
-          <View style={styles.screenSlide}>
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
             <AppSelectionScreen
               onBack={() => navigateTo(2)}
               onFinish={() => navigateTo(0)}
@@ -83,10 +84,8 @@ const styles = StyleSheet.create({
   sliderTrack: {
     flex: 1,
     flexDirection: 'row',
-    width: SCREEN_WIDTH * 4,
   },
   screenSlide: {
-    width: SCREEN_WIDTH,
     flex: 1,
   },
 });

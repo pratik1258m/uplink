@@ -3,11 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Animated,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   GrayEclipseBg,
   UpplinkLogo,
@@ -17,60 +16,114 @@ import {
   Graphics2Icon,
   Graphics1,
 } from '../assets/svgs';
+import { BouncyButton } from '../components/BouncyButton';
 
 interface LoginScreenProps {
   onContinue: () => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
-  const floatAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
+
+  // Decoupled floating animations for organic, alive physics
+  const floatAnim1 = useRef(new Animated.Value(0)).current;
+  const floatAnim2 = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    const float = Animated.loop(
+    // Badge 1 levitation
+    const float1 = Animated.loop(
       Animated.sequence([
-        Animated.timing(floatAnim, {
-          toValue: -6,
-          duration: 1800,
+        Animated.timing(floatAnim1, {
+          toValue: -8,
+          duration: 2200,
           useNativeDriver: true,
         }),
-        Animated.timing(floatAnim, {
+        Animated.timing(floatAnim1, {
           toValue: 0,
-          duration: 1800,
+          duration: 2200,
           useNativeDriver: true,
         }),
       ])
     );
-    float.start();
-    return () => float.stop();
-  }, [floatAnim]);
+
+    // Badge 2 levitation (decoupled speed for natural organic feel)
+    const float2 = Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim2, {
+          toValue: 7,
+          duration: 2800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim2, {
+          toValue: 0,
+          duration: 2800,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    // Central emblem breathing
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.03,
+          duration: 2500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 0.98,
+          duration: 2500,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    float1.start();
+    float2.start();
+    pulse.start();
+
+    return () => {
+      float1.stop();
+      float2.stop();
+      pulse.stop();
+    };
+  }, [floatAnim1, floatAnim2, pulseAnim]);
+
+  const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 12;
+  const bottomPadding = Math.max(insets.bottom, 20) + 12;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={[styles.root, { paddingTop: topPadding, paddingBottom: bottomPadding }]}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.container}>
-        {/* Background Radial/Concentric Ring */}
+        {/* Background Concentric Ring Geometry */}
         <View style={styles.backgroundEclipse}>
           <GrayEclipseBg width={375} height={375} />
         </View>
 
-        {/* Top Graphic / Logo Area */}
+        {/* Dynamic Holographic Hero Stage */}
         <View style={styles.heroSection}>
           {/* Graphics 1 - Left concentric accent */}
           <View style={styles.graphics1}>
             <Graphics1 width={64} height={64} />
           </View>
 
-          {/* Central Upplink Emblem */}
-          <View style={styles.logoWrapper}>
+          {/* Central UppLink Emblem with Gentle Pulse */}
+          <Animated.View
+            style={[
+              styles.logoWrapper,
+              { transform: [{ scale: pulseAnim }] },
+            ]}>
             <UpplinkLogo width={178} height={178} />
-          </View>
+          </Animated.View>
 
-          {/* Graphics 3 - Floating Top Right Purple Gradient Badge */}
+          {/* Floating Top Right Purple Gradient Badge */}
           <Animated.View
             style={[
               styles.graphics3Container,
               {
-                transform: [{ translateY: floatAnim }, { rotate: '20.9deg' }],
+                transform: [{ translateY: floatAnim1 }, { rotate: '20.9deg' }],
               },
             ]}>
             <View style={styles.graphics3Outer}>
@@ -80,20 +133,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
             </View>
           </Animated.View>
 
-          {/* Graphics 2 - Floating Bottom Right Mint/Cyan Diamond Badge */}
+          {/* Floating Bottom Right Mint/Cyan Diamond Badge */}
           <Animated.View
             style={[
               styles.graphics2Container,
               {
-                transform: [
-                  {
-                    translateY: floatAnim.interpolate({
-                      inputRange: [-6, 0],
-                      outputRange: [0, -6],
-                    }),
-                  },
-                  { rotate: '45deg' },
-                ],
+                transform: [{ translateY: floatAnim2 }, { rotate: '45deg' }],
               },
             ]}>
             <View style={styles.graphics2Outer}>
@@ -112,27 +157,27 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
           </Text>
         </View>
 
-        {/* Login Buttons */}
+        {/* Tactile Login Action Buttons */}
         <View style={styles.buttonSection}>
-          <TouchableOpacity
+          <BouncyButton
             style={styles.googleButton}
-            activeOpacity={0.85}
+            activeScale={0.96}
             onPress={onContinue}>
             <View style={styles.iconCircle}>
               <GoogleIcon width={20} height={20} />
             </View>
             <Text style={styles.buttonText}>Login with Google</Text>
-          </TouchableOpacity>
+          </BouncyButton>
 
-          <TouchableOpacity
+          <BouncyButton
             style={styles.appleButton}
-            activeOpacity={0.85}
+            activeScale={0.96}
             onPress={onContinue}>
             <View style={styles.iconCircle}>
               <AppleIcon width={20} height={20} />
             </View>
             <Text style={styles.buttonText}>Login with Apple</Text>
-          </TouchableOpacity>
+          </BouncyButton>
         </View>
 
         {/* Footer / Disclaimers */}
@@ -145,12 +190,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
           <Text style={styles.ownerText}>OWNED BY KADVA KORP</Text>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
@@ -158,7 +203,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
-    paddingBottom: 24,
   },
   backgroundEclipse: {
     position: 'absolute',
@@ -168,10 +212,10 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   heroSection: {
-    height: 330,
+    height: 310,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
     zIndex: 1,
   },
   logoWrapper: {
@@ -179,6 +223,10 @@ const styles = StyleSheet.create({
     height: 178,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#02D1FE',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
   },
   graphics1: {
     position: 'absolute',
@@ -197,134 +245,116 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(115, 103, 240, 0.25)',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#7367F0',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 6,
   },
   graphics3Inner: {
-    width: 44,
-    height: 44,
+    width: 48,
+    height: 48,
     borderRadius: 14,
-    backgroundColor: '#7367F0',
+    backgroundColor: '#9B51E0',
     justifyContent: 'center',
     alignItems: 'center',
   },
   graphics2Container: {
     position: 'absolute',
-    right: 28,
-    bottom: 30,
+    right: 32,
+    bottom: 25,
   },
   graphics2Outer: {
-    width: 64,
-    height: 64,
+    width: 44,
+    height: 44,
     borderRadius: 14,
-    backgroundColor: 'rgba(57, 225, 205, 0.25)',
+    backgroundColor: 'rgba(2, 209, 254, 0.25)',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#39E1CD',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
   },
   graphics2Inner: {
-    width: 46,
-    height: 46,
+    width: 34,
+    height: 34,
     borderRadius: 10,
-    backgroundColor: '#35C1B0',
+    backgroundColor: '#02D1FE',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ rotate: '-45deg' }],
   },
   titleSection: {
     alignItems: 'center',
     marginVertical: 10,
-    zIndex: 1,
   },
   brandTitle: {
-    fontSize: 38,
+    fontSize: 28,
     fontWeight: '800',
-    color: '#121212',
+    color: '#000000',
+    marginBottom: 8,
     letterSpacing: -0.5,
-    marginBottom: 10,
-    textAlign: 'center',
   },
   description: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#484848',
+    color: '#666666',
     textAlign: 'center',
-    paddingHorizontal: 20,
+    fontWeight: '400',
   },
   buttonSection: {
-    gap: 14,
-    marginTop: 10,
-    zIndex: 1,
+    gap: 12,
+    marginVertical: 10,
   },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#3AA0FF',
-    height: 56,
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    shadowColor: '#3AA0FF',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 3,
+    justifyContent: 'center',
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1.5,
+    borderColor: '#E8E8E8',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
   },
   appleButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#000000',
-    height: 56,
-    borderRadius: 16,
-    paddingHorizontal: 12,
+    justifyContent: 'center',
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1.5,
+    borderColor: '#E8E8E8',
+    backgroundColor: '#FFFFFF',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
   },
   iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginRight: 10,
   },
   buttonText: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    marginRight: 32,
+    color: '#000000',
+    letterSpacing: -0.2,
   },
   footerSection: {
     alignItems: 'center',
-    gap: 12,
-    marginTop: 14,
-    zIndex: 1,
+    marginTop: 8,
+    gap: 6,
   },
   termsText: {
-    fontSize: 13,
-    color: '#555555',
+    fontSize: 11,
+    color: '#888888',
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 16,
   },
   termsLink: {
-    color: '#111111',
     fontWeight: '600',
+    color: '#000000',
   },
   ownerText: {
-    fontSize: 10,
-    letterSpacing: 1.2,
-    color: '#888888',
+    fontSize: 9,
     fontWeight: '600',
+    color: '#BBBBBB',
+    letterSpacing: 1.2,
   },
 });

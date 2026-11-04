@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
   StatusBar,
-  Animated,
+  Platform,
 } from 'react-native';
-import { AppImages } from '../assets/images';
-import { SphereCenterIcon, SphereAura } from '../assets/svgs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { GridBackground } from '../components/GridBackground';
+import { GlowingSphere } from '../components/GlowingSphere';
+import { BouncyButton } from '../components/BouncyButton';
 
 interface KnowYouBetterScreenProps {
   onBack: () => void;
@@ -20,189 +20,153 @@ export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
   onBack,
   onNext,
 }) => {
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    const pulse = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.06,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 0.96,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    pulse.start();
-    return () => pulse.stop();
-  }, [pulseAnim]);
+  const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 18;
+  const bottomPadding = Math.max(insets.bottom, 20) + 12;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={[styles.root, { paddingTop: topPadding, paddingBottom: bottomPadding }]}>
       <StatusBar barStyle="dark-content" />
-      {/* Header */}
+      <GridBackground />
+
+      {/* Top Header */}
       <View style={styles.header}>
-        <TouchableOpacity
+        <BouncyButton
           style={styles.backButton}
           onPress={onBack}
-          activeOpacity={0.7}>
+          activeScale={0.9}>
           <Text style={styles.backArrow}>‹</Text>
-        </TouchableOpacity>
+        </BouncyButton>
+
         <Text style={styles.headerTitle}>UppLink AI</Text>
+
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <View style={styles.container}>
-        {/* Glowing AI Sphere Hero with Breathing Pulse Animation */}
-        <View style={styles.sphereContainer}>
-          <Animated.View
-            style={[
-              styles.auraWrapper,
-              {
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}>
-            <SphereAura width={340} height={340} />
-          </Animated.View>
-          <Animated.Image
-            source={AppImages.aiSphere}
-            style={[
-              styles.aiSphereImage,
-              {
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}
-            resizeMode="contain"
-          />
-          <View style={styles.sphereIconOverlay}>
-            <SphereCenterIcon width={72} height={72} />
-          </View>
+      {/* Main Hero Content */}
+      <View style={styles.mainContent}>
+        {/* Living Holographic AI Sphere */}
+        <View style={styles.sphereSection}>
+          <GlowingSphere size={240} />
         </View>
 
-        {/* Heading */}
+        {/* Clean, Majestic Figma Headline */}
         <View style={styles.titleWrapper}>
           <Text style={styles.mainHeading}>
             Help me to get to{'\n'}know you better.
           </Text>
         </View>
-
-        {/* Bottom Next Button */}
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={styles.nextButton}
-            activeOpacity={0.85}
-            onPress={onNext}>
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
       </View>
-    </SafeAreaView>
+
+      {/* Bottom Action Button */}
+      <View style={styles.footer}>
+        <BouncyButton
+          style={styles.nextButton}
+          activeScale={0.96}
+          onPress={onNext}>
+          <Text style={styles.nextButtonText}>Next</Text>
+        </BouncyButton>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    justifyContent: 'space-between',
   },
   header: {
-    height: 56,
+    height: 48,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F7',
+    zIndex: 10,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     borderWidth: 1,
-    borderColor: '#EFEFEF',
+    borderColor: '#EAEAEA',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1.5 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   backArrow: {
     fontSize: 26,
     color: '#111111',
     lineHeight: 28,
+    marginTop: -2,
+    fontWeight: '300',
   },
   headerTitle: {
+    fontFamily: Platform.select({
+      ios: 'Audiowide',
+      android: 'Audiowide-Regular',
+      default: 'sans-serif',
+    }),
     fontSize: 22,
     fontWeight: '700',
     color: '#000000',
-    letterSpacing: -0.32,
+    letterSpacing: 0.3,
   },
   headerPlaceholder: {
-    width: 36,
+    width: 38,
   },
-  container: {
+  mainContent: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 24,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 24,
   },
-  sphereContainer: {
-    width: 280,
-    height: 280,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  auraWrapper: {
-    position: 'absolute',
-    opacity: 0.7,
-  },
-  aiSphereImage: {
-    width: 260,
-    height: 260,
-  },
-  sphereIconOverlay: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
+  sphereSection: {
+    marginBottom: 20,
   },
   titleWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
     paddingHorizontal: 16,
+    marginTop: 10,
   },
   mainHeading: {
     fontSize: 32,
     fontWeight: '800',
-    color: '#121212',
+    color: '#111111',
     textAlign: 'center',
-    lineHeight: 42,
-    letterSpacing: -0.3,
+    lineHeight: 40,
+    letterSpacing: -0.5,
   },
   footer: {
-    width: '100%',
     alignItems: 'center',
-    marginTop: 'auto',
+    paddingHorizontal: 24,
+    paddingTop: 8,
   },
   nextButton: {
-    backgroundColor: '#03A9F4',
     width: 214,
     height: 48,
     borderRadius: 16,
+    backgroundColor: '#02B8FE',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#03A9F4',
+    shadowColor: '#02D1FE',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 5,
   },
   nextButtonText: {
-    color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
 });

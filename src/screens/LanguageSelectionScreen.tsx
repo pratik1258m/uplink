@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  Image,
-  ScrollView,
   StatusBar,
   Animated,
+  Platform,
 } from 'react-native';
-import { AppImages } from '../assets/images';
-import { SphereCenterIcon, SphereAura } from '../assets/svgs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { GridBackground } from '../components/GridBackground';
+import { GlowingSphere } from '../components/GlowingSphere';
+import { BouncyButton } from '../components/BouncyButton';
 
 interface LanguageSelectionScreenProps {
   onBack: () => void;
@@ -32,95 +31,91 @@ export const LanguageSelectionScreen: React.FC<LanguageSelectionScreenProps> = (
   onBack,
   onNext,
 }) => {
+  const insets = useSafeAreaInsets();
   const [selectedLanguage, setSelectedLanguage] = useState('English');
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const titleAnim = useRef(new Animated.Value(1)).current;
 
-  useEffect(() => {
-    const pulse = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.06,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 0.96,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    pulse.start();
-    return () => pulse.stop();
-  }, [pulseAnim]);
+  // Safe area metrics accounting for Android camera notches & punch holes
+  const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 18;
+  const bottomPadding = Math.max(insets.bottom, 20) + 12;
+
+  const handleSelectLanguage = (lang: string) => {
+    if (lang === selectedLanguage) return;
+    // Bouncy pop animation for the selected language text
+    Animated.sequence([
+      Animated.timing(titleAnim, {
+        toValue: 0.88,
+        duration: 90,
+        useNativeDriver: true,
+      }),
+      Animated.spring(titleAnim, {
+        toValue: 1,
+        tension: 90,
+        friction: 6,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    setSelectedLanguage(lang);
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={[styles.root, { paddingTop: topPadding, paddingBottom: bottomPadding }]}>
       <StatusBar barStyle="dark-content" />
+      <GridBackground />
+
+      {/* Top Header */}
       <View style={styles.header}>
-        <TouchableOpacity
+        <BouncyButton
           style={styles.backButton}
           onPress={onBack}
-          activeOpacity={0.7}>
+          activeScale={0.9}>
           <Text style={styles.backArrow}>‹</Text>
-        </TouchableOpacity>
+        </BouncyButton>
+
         <Text style={styles.headerTitle}>UppLink AI</Text>
+
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}>
-        {/* Glowing AI Sphere Hero with Breathing Pulse Animation */}
-        <View style={styles.sphereContainer}>
-          <Animated.View
-            style={[
-              styles.auraWrapper,
-              {
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}>
-            <SphereAura width={340} height={340} />
-          </Animated.View>
-          <Animated.Image
-            source={AppImages.aiSphere}
-            style={[
-              styles.aiSphereImage,
-              {
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}
-            resizeMode="contain"
-          />
-          <View style={styles.sphereIconOverlay}>
-            <SphereCenterIcon width={72} height={72} />
-          </View>
+      {/* Main Content Area */}
+      <View style={styles.mainContent}>
+        {/* Living, Glowing Holographic AI Sphere */}
+        <View style={styles.sphereSection}>
+          <GlowingSphere size={215} />
         </View>
 
-        {/* Content Section */}
+        {/* Dynamic Location & Language Text */}
         <View style={styles.contentSection}>
           <Text style={styles.locationNotice}>
             As per your location, the language selected is
           </Text>
-          <Text style={styles.currentLanguage}>{selectedLanguage}</Text>
+
+          <Animated.Text
+            style={[
+              styles.currentLanguage,
+              { transform: [{ scale: titleAnim }] },
+            ]}>
+            {selectedLanguage}
+          </Animated.Text>
+
           <Text style={styles.changeNotice}>
             Change it by speaking to the AI in your native language or by
             choosing one from the options below.
           </Text>
 
-          {/* Language Pills Grid */}
+          {/* Interactive Language Pills */}
           <View style={styles.languageGrid}>
             {AVAILABLE_LANGUAGES.map((lang) => {
               const isSelected = selectedLanguage === lang;
               return (
-                <TouchableOpacity
+                <BouncyButton
                   key={lang}
                   style={[
                     styles.languagePill,
                     isSelected && styles.languagePillSelected,
                   ]}
-                  activeOpacity={0.75}
-                  onPress={() => setSelectedLanguage(lang)}>
+                  activeScale={0.93}
+                  onPress={() => handleSelectLanguage(lang)}>
                   <Text
                     style={[
                       styles.languagePillText,
@@ -128,166 +123,163 @@ export const LanguageSelectionScreen: React.FC<LanguageSelectionScreenProps> = (
                     ]}>
                     {lang}
                   </Text>
-                </TouchableOpacity>
+                </BouncyButton>
               );
             })}
           </View>
         </View>
-      </ScrollView>
+      </View>
 
-      {/* Bottom Next Button */}
+      {/* Floating Bottom Next Button */}
       <View style={styles.footer}>
-        <TouchableOpacity
+        <BouncyButton
           style={styles.nextButton}
-          activeOpacity={0.85}
+          activeScale={0.96}
           onPress={() => onNext(selectedLanguage)}>
           <Text style={styles.nextButtonText}>Next</Text>
-        </TouchableOpacity>
+        </BouncyButton>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    justifyContent: 'space-between',
   },
   header: {
-    height: 56,
+    height: 48,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F7',
+    zIndex: 10,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     borderWidth: 1,
-    borderColor: '#EFEFEF',
+    borderColor: '#EAEAEA',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1.5 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   backArrow: {
     fontSize: 26,
     color: '#111111',
     lineHeight: 28,
+    marginTop: -2,
+    fontWeight: '300',
   },
   headerTitle: {
+    fontFamily: Platform.select({
+      ios: 'Audiowide',
+      android: 'Audiowide-Regular',
+      default: 'sans-serif',
+    }),
     fontSize: 22,
     fontWeight: '700',
     color: '#000000',
-    letterSpacing: -0.32,
+    letterSpacing: 0.3,
   },
   headerPlaceholder: {
-    width: 36,
+    width: 38,
   },
-  scrollContent: {
-    paddingHorizontal: 24,
-    paddingTop: 10,
-    paddingBottom: 20,
+  mainContent: {
+    flex: 1,
     alignItems: 'center',
-  },
-  sphereContainer: {
-    width: 270,
-    height: 270,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
+    paddingHorizontal: 20,
   },
-  auraWrapper: {
-    position: 'absolute',
-    opacity: 0.65,
-  },
-  aiSphereImage: {
-    width: 240,
-    height: 240,
-  },
-  sphereIconOverlay: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
+  sphereSection: {
+    marginVertical: 4,
   },
   contentSection: {
     alignItems: 'center',
     width: '100%',
-    marginTop: 10,
+    marginTop: 6,
   },
   locationNotice: {
     fontSize: 14,
-    color: '#444444',
+    color: '#333333',
     textAlign: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   currentLanguage: {
-    fontSize: 36,
+    fontSize: 38,
     fontWeight: '800',
-    color: '#111111',
-    marginBottom: 10,
+    color: '#121212',
+    letterSpacing: -0.5,
+    marginVertical: 2,
   },
   changeNotice: {
-    fontSize: 13,
-    color: '#666666',
+    fontSize: 12,
+    color: '#444444',
     textAlign: 'center',
-    lineHeight: 18,
-    marginBottom: 20,
-    paddingHorizontal: 16,
+    lineHeight: 17,
+    maxWidth: 290,
+    marginBottom: 16,
   },
   languageGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    maxWidth: 270,
     gap: 10,
-    maxWidth: 290,
   },
   languagePill: {
+    backgroundColor: '#F7F7F7',
+    borderWidth: 1,
+    borderColor: '#EBEBEB',
+    borderRadius: 100,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-    backgroundColor: '#FAFAFA',
   },
   languagePillSelected: {
-    borderColor: '#0288D1',
-    backgroundColor: '#E1F5FE',
+    backgroundColor: 'rgba(2, 209, 254, 0.12)',
+    borderColor: '#02D1FE',
+    borderWidth: 1.5,
   },
   languagePillText: {
-    fontSize: 14,
-    color: '#333333',
+    fontSize: 13,
     fontWeight: '500',
+    color: '#333333',
+    letterSpacing: -0.2,
   },
   languagePillTextSelected: {
     color: '#0288D1',
     fontWeight: '700',
   },
   footer: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#F5F5F7',
-    backgroundColor: '#FFFFFF',
     alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 8,
   },
   nextButton: {
-    backgroundColor: '#03A9F4',
     width: 214,
     height: 48,
     borderRadius: 16,
+    backgroundColor: '#02B8FE',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#03A9F4',
+    shadowColor: '#02D1FE',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 5,
   },
   nextButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
 });
