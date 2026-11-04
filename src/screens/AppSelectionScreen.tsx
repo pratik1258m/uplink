@@ -6,74 +6,34 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
-  FlatList,
+  ScrollView,
   TextInput,
   StatusBar,
 } from 'react-native';
 import { AppImages } from '../assets/images';
-import { RadioSelected } from '../assets/svgs';
+import { RadioSelected, RadioUnselected, SearchIcon } from '../assets/svgs';
 
 interface AppSelectionScreenProps {
   onBack: () => void;
-  onFinish: (selectedApps: string[]) => void;
+  onFinish?: (selectedApps: string[]) => void;
 }
 
-interface AppItem {
+interface FigmaAppItem {
   id: string;
   name: string;
-  category: string;
   icon: any;
+  defaultSelected: boolean;
 }
 
-const APPS_LIST: AppItem[] = [
-  {
-    id: 'twitter',
-    name: 'Twitter (X)',
-    category: 'Social & Updates',
-    icon: AppImages.twitter,
-  },
-  {
-    id: 'reddit',
-    name: 'Reddit',
-    category: 'Communities & Discussion',
-    icon: AppImages.reddit,
-  },
-  {
-    id: 'telegram',
-    name: 'Telegram',
-    category: 'Messaging & Channels',
-    icon: AppImages.telegram,
-  },
-  {
-    id: 'chrome',
-    name: 'Google Chrome',
-    category: 'Web & Bookmarks',
-    icon: AppImages.chrome,
-  },
-  {
-    id: 'youtube',
-    name: 'YouTube',
-    category: 'Video & Tutorials',
-    icon: AppImages.youtube,
-  },
-  {
-    id: 'instagram',
-    name: 'Instagram',
-    category: 'Media & Visuals',
-    icon: AppImages.instagram,
-  },
-  {
-    id: 'facebook',
-    name: 'Facebook',
-    category: 'Social Network',
-    icon: AppImages.facebook,
-  },
-  {
-    id: 'tiktok',
-    name: 'TikTok',
-    category: 'Short Video Clips',
-    icon: AppImages.tiktok,
-  },
+const FIGMA_APPS: FigmaAppItem[] = [
+  { id: 'youtube', name: 'YouTube', icon: AppImages.youtube, defaultSelected: true },
+  { id: 'chrome', name: 'Chrome', icon: AppImages.chrome, defaultSelected: true },
+  { id: 'reddit', name: 'Reddit', icon: AppImages.reddit, defaultSelected: true },
+  { id: 'instagram', name: 'Instagram', icon: AppImages.instagram, defaultSelected: true },
+  { id: 'snapchat', name: 'Snapchat', icon: AppImages.snapchat, defaultSelected: true },
+  { id: 'edge', name: 'Edge', icon: AppImages.edge, defaultSelected: false },
+  { id: 'facebook', name: 'facebook', icon: AppImages.facebook, defaultSelected: true },
+  { id: 'tiktok', name: 'Tiktok', icon: AppImages.tiktok, defaultSelected: true },
 ];
 
 export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
@@ -81,26 +41,24 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
   onFinish,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAppIds, setSelectedAppIds] = useState<string[]>([
-    'twitter',
-    'reddit',
-    'telegram',
-  ]);
+  const [selectedAppIds, setSelectedAppIds] = useState<string[]>(
+    FIGMA_APPS.filter((a) => a.defaultSelected).map((a) => a.id)
+  );
 
-  const toggleAppSelection = (id: string) => {
+  const toggleApp = (id: string) => {
     setSelectedAppIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const filteredApps = APPS_LIST.filter((app) =>
+  const filteredApps = FIGMA_APPS.filter((app) =>
     app.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
-      {/* Navigation Header */}
+      {/* Top Header */}
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -109,85 +67,73 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
           <Text style={styles.backArrow}>‹</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>App Selection</Text>
-        <TouchableOpacity
-          onPress={() => {
-            if (selectedAppIds.length === APPS_LIST.length) {
-              setSelectedAppIds([]);
-            } else {
-              setSelectedAppIds(APPS_LIST.map((a) => a.id));
-            }
-          }}>
-          <Text style={styles.selectAllText}>
-            {selectedAppIds.length === APPS_LIST.length ? 'Clear' : 'All'}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.headerPlaceholder} />
       </View>
 
-      {/* Search Input Box */}
-      <View style={styles.searchContainer}>
+      {/* Search Bar matching Figma container */}
+      <View style={styles.searchWrapper}>
         <View style={styles.searchBar}>
-          <Text style={styles.searchIcon}>🔍</Text>
+          <SearchIcon width={20} height={20} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search apps..."
-            placeholderTextColor="#8E8E93"
+            placeholder="Search "
+            placeholderTextColor="#7C7C7C"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            clearButtonMode="while-editing"
           />
         </View>
       </View>
 
-      {/* Apps List */}
-      <FlatList
-        data={filteredApps}
-        keyExtractor={(item) => item.id}
+      {/* App Rows matching Figma layout */}
+      <ScrollView
         contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => {
+        showsVerticalScrollIndicator={false}>
+        {filteredApps.map((item, index) => {
           const isSelected = selectedAppIds.includes(item.id);
+          const showSeparator = index < filteredApps.length - 1;
+
           return (
-            <TouchableOpacity
-              style={styles.appRow}
-              activeOpacity={0.7}
-              onPress={() => toggleAppSelection(item.id)}>
-              <View style={styles.appInfo}>
-                <Image
-                  source={item.icon}
-                  style={styles.appIcon}
-                  resizeMode="contain"
-                />
-                <View>
+            <View key={item.id}>
+              <TouchableOpacity
+                style={styles.appRow}
+                activeOpacity={0.75}
+                onPress={() => toggleApp(item.id)}>
+                <View style={styles.appLeft}>
+                  <Image
+                    source={item.icon}
+                    style={styles.appIcon}
+                    resizeMode="cover"
+                  />
                   <Text style={styles.appName}>{item.name}</Text>
-                  <Text style={styles.appCategory}>{item.category}</Text>
                 </View>
-              </View>
 
-              {/* Radio Button */}
-              <View style={styles.radioWrapper}>
-                {isSelected ? (
-                  <RadioSelected width={22} height={22} />
-                ) : (
-                  <View style={styles.radioUnselected} />
-                )}
-              </View>
-            </TouchableOpacity>
+                {/* Exact Figma Radio Button */}
+                <View style={styles.radioWrapper}>
+                  {isSelected ? (
+                    <RadioSelected width={16} height={16} />
+                  ) : (
+                    <RadioUnselected width={16} height={16} />
+                  )}
+                </View>
+              </TouchableOpacity>
+
+              {showSeparator && <View style={styles.separator} />}
+            </View>
           );
-        }}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+        })}
+      </ScrollView>
 
-      {/* Bottom Finish Button */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.finishButton}
-          activeOpacity={0.85}
-          onPress={() => onFinish(selectedAppIds)}>
-          <Text style={styles.finishButtonText}>
-            Finish Setup ({selectedAppIds.length})
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {/* Bottom Home Indicator area / Finish Action */}
+      {onFinish && (
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={styles.finishButton}
+            activeOpacity={0.85}
+            onPress={() => onFinish(selectedAppIds)}>
+            <Text style={styles.finishButtonText}>Continue</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -203,8 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F7',
+    backgroundColor: '#FFFFFF',
   },
   backButton: {
     width: 36,
@@ -221,108 +166,88 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '700',
     color: '#000000',
-    letterSpacing: -0.3,
+    letterSpacing: -0.32,
   },
-  selectAllText: {
-    fontSize: 14,
-    color: '#0288D1',
-    fontWeight: '600',
-    paddingHorizontal: 6,
-    paddingVertical: 4,
+  headerPlaceholder: {
+    width: 36,
   },
-  searchContainer: {
+  searchWrapper: {
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F7',
-    borderRadius: 14,
+    backgroundColor: '#F5F7F9',
+    borderRadius: 10,
+    height: 48,
     paddingHorizontal: 12,
-    height: 44,
-  },
-  searchIcon: {
-    fontSize: 14,
-    marginRight: 8,
+    gap: 12,
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
+    fontWeight: '600',
     color: '#111111',
     height: '100%',
   },
   listContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: 9,
+    paddingBottom: 24,
   },
   appRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    height: 76,
   },
-  appInfo: {
+  appLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 38,
   },
   appIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: '#F8F8F8',
+    width: 60,
+    height: 60,
+    borderRadius: 12,
   },
   appName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 2,
-  },
-  appCategory: {
-    fontSize: 12,
-    color: '#8E8E93',
+    fontWeight: '500',
+    color: '#000000',
+    letterSpacing: -0.3,
   },
   radioWrapper: {
     width: 24,
     height: 24,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  radioUnselected: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#C7C7CC',
-    backgroundColor: '#FFFFFF',
+    marginRight: 6,
   },
   separator: {
     height: 1,
-    backgroundColor: '#F0F0F2',
-    marginLeft: 66,
+    backgroundColor: '#EAEAEA',
+    marginLeft: 110,
   },
   footer: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#F5F5F7',
-    backgroundColor: '#FFFFFF',
   },
   finishButton: {
-    backgroundColor: '#02A9F4',
-    height: 52,
+    backgroundColor: '#03A9F4',
+    height: 48,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#02A9F4',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
   },
   finishButtonText: {
     color: '#FFFFFF',

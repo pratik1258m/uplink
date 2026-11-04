@@ -18,6 +18,7 @@ interface LanguageSelectionScreenProps {
 }
 
 const AVAILABLE_LANGUAGES = [
+  'English',
   'Spanish',
   'Italian',
   'French',
@@ -237,14 +238,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#F5F5F7',
     backgroundColor: '#FFFFFF',
+    alignItems: 'center',
   },
   nextButton: {
-    backgroundColor: '#02A9F4',
-    height: 52,
+    backgroundColor: '#03A9F4',
+    width: 214,
+    height: 48,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#02A9F4',
+    shadowColor: '#03A9F4',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
