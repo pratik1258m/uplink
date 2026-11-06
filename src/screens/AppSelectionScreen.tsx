@@ -49,8 +49,7 @@ const AppRowItem: React.FC<{
   item: FigmaAppItem;
   isSelected: boolean;
   onToggle: () => void;
-  showSeparator: boolean;
-}> = ({ item, isSelected, onToggle, showSeparator }) => {
+}> = ({ item, isSelected, onToggle }) => {
   const radioScale = useRef(new Animated.Value(1)).current;
 
   const handlePress = () => {
@@ -72,34 +71,33 @@ const AppRowItem: React.FC<{
   };
 
   return (
-    <View>
-      <BouncyButton
-        style={styles.appRow}
-        activeScale={0.98}
-        onPress={handlePress}>
-        <View style={styles.appLeft}>
-          <View style={styles.iconContainer}>
-            <Image
-              source={item.icon}
-              style={styles.appIcon}
-              resizeMode="contain"
-            />
-          </View>
-          <Text style={styles.appName}>{item.name}</Text>
-        </View>
+    <BouncyButton
+      style={[styles.appCard, isSelected && styles.appCardSelected]}
+      activeScale={0.97}
+      onPress={handlePress}>
+      <View
+        style={[
+          styles.iconContainer,
+          isSelected && styles.iconContainerSelected,
+        ]}>
+        <Image
+          source={item.icon}
+          style={styles.appIcon}
+          resizeMode="contain"
+        />
+      </View>
 
-        <Animated.View
-          style={[styles.radioWrapper, { transform: [{ scale: radioScale }] }]}>
-          {isSelected ? (
-            <RadioSelected width={22} height={22} />
-          ) : (
-            <RadioUnselected width={22} height={22} />
-          )}
-        </Animated.View>
-      </BouncyButton>
+      <Text style={styles.appName}>{item.name}</Text>
 
-      {showSeparator && <View style={styles.divider} />}
-    </View>
+      <Animated.View
+        style={[styles.radioWrapper, { transform: [{ scale: radioScale }] }]}>
+        {isSelected ? (
+          <RadioSelected width={22} height={22} />
+        ) : (
+          <RadioUnselected width={22} height={22} />
+        )}
+      </Animated.View>
+    </BouncyButton>
   );
 };
 
@@ -146,6 +144,12 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
         <View style={styles.headerPlaceholder} />
       </View>
 
+      {/* Intro */}
+      <View style={styles.intro}>
+        <Text style={styles.introHeading}>{strings.appSelectionHeading}</Text>
+        <Text style={styles.introSubtitle}>{strings.appSelectionSubtitle}</Text>
+      </View>
+
       {/* Modern Search Bar */}
       <View style={styles.searchWrapper}>
         <View style={styles.searchBar}>
@@ -168,7 +172,8 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
         </View>
 
         {/* Dynamic Selection Indicator */}
-        <View style={styles.counterRow}>
+        <View style={styles.counterPill}>
+          <View style={styles.counterDot} />
           <Text style={styles.counterText}>
             {formatCount(
               strings.connectedCount,
@@ -184,13 +189,12 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
         style={styles.listScroll}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}>
-        {filteredApps.map((item, index) => (
+        {filteredApps.map(item => (
           <AppRowItem
             key={item.id}
             item={item}
             isSelected={selectedAppIds.includes(item.id)}
             onToggle={() => toggleApp(item.id)}
-            showSeparator={index < filteredApps.length - 1}
           />
         ))}
       </ScrollView>
@@ -257,20 +261,37 @@ const styles = StyleSheet.create({
   headerPlaceholder: {
     width: 38,
   },
+  intro: {
+    paddingHorizontal: 20,
+    marginTop: 18,
+  },
+  introHeading: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#0A0A0A',
+    letterSpacing: -0.9,
+    lineHeight: 34,
+  },
+  introSubtitle: {
+    marginTop: 10,
+    fontSize: 14,
+    lineHeight: 21,
+    color: '#6B7680',
+  },
   searchWrapper: {
     paddingHorizontal: 20,
-    marginTop: 12,
-    marginBottom: 6,
+    marginTop: 16,
+    marginBottom: 4,
   },
   searchBar: {
-    height: 48,
-    backgroundColor: '#F5F7F9',
-    borderRadius: 12,
+    height: 52,
+    backgroundColor: '#F6F8FA',
+    borderRadius: 26,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: '#ECEEF2',
+    paddingHorizontal: 18,
+    borderWidth: 1.5,
+    borderColor: '#E8EDF1',
   },
   searchInput: {
     flex: 1,
@@ -285,60 +306,78 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingHorizontal: 4,
   },
-  counterRow: {
-    marginTop: 10,
-    marginBottom: 4,
+  counterPill: {
+    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    backgroundColor: 'rgba(2, 209, 254, 0.1)',
+  },
+  counterDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#02D1FE',
+    marginRight: 8,
   },
   counterText: {
     fontSize: 12,
-    color: '#666666',
-    fontWeight: '500',
+    color: '#0288D1',
+    fontWeight: '700',
   },
   listScroll: {
     flex: 1,
   },
   listContent: {
     paddingHorizontal: 20,
-    paddingTop: 4,
+    paddingTop: 12,
     paddingBottom: 24,
   },
-  appRow: {
+  appCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    paddingRight: 16,
+    marginBottom: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#EDF0F2',
+    backgroundColor: '#FFFFFF',
   },
-  appLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  appCardSelected: {
+    borderColor: '#CDEEF9',
+    backgroundColor: '#F4FBFE',
   },
   iconContainer: {
-    width: 44,
-    height: 44,
+    width: 46,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: '#F5F7F9',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
   },
+  iconContainerSelected: {
+    backgroundColor: 'rgba(2, 209, 254, 0.12)',
+  },
   appIcon: {
-    width: 40,
-    height: 40,
+    width: 34,
+    height: 34,
   },
   appName: {
+    flex: 1,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#111111',
     letterSpacing: -0.3,
   },
   radioWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#F0F0F2',
-    marginLeft: 58,
   },
   footer: {
     paddingHorizontal: 20,

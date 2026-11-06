@@ -81,6 +81,8 @@ export interface AppStrings {
   knowYouBetterHeading: string;
   next: string;
   appSelectionTitle: string;
+  appSelectionHeading: string;
+  appSelectionSubtitle: string;
   searchPlaceholder: string;
   connectedCount: string;
   onboarding: OnboardingStrings;
@@ -92,6 +94,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: 'Help me to get to\nknow you better.',
     next: 'Next',
     appSelectionTitle: 'App Selection',
+    appSelectionHeading: 'Which apps can\nUppLink access?',
+    appSelectionSubtitle:
+      'Pick the apps you are comfortable letting UppLink access. It uses them to save links, notes and reminders — you are always in control.',
     searchPlaceholder: 'Search',
     connectedCount: '{selected} of {total} connected',
     onboarding: {
@@ -164,6 +169,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: 'Ayúdame a conocerte\nmejor.',
     next: 'Siguiente',
     appSelectionTitle: 'Selección de apps',
+    appSelectionHeading: '¿A qué apps puede\nacceder UppLink?',
+    appSelectionSubtitle:
+      'Elige las apps a las que permites acceder a UppLink. Las usa para guardar enlaces, notas y recordatorios: tú tienes el control.',
     searchPlaceholder: 'Buscar',
     connectedCount: '{selected} de {total} conectadas',
     onboarding: {
@@ -236,6 +244,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: 'Aiutami a conoscerti\nmeglio.',
     next: 'Avanti',
     appSelectionTitle: 'Selezione app',
+    appSelectionHeading: 'A quali app può\naccedere UppLink?',
+    appSelectionSubtitle:
+      'Scegli le app a cui vuoi dare accesso a UppLink. Le usa per salvare link, note e promemoria: hai sempre il controllo.',
     searchPlaceholder: 'Cerca',
     connectedCount: '{selected} di {total} connesse',
     onboarding: {
@@ -308,6 +319,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: 'Aide-moi à mieux\nte connaître.',
     next: 'Suivant',
     appSelectionTitle: "Sélection d'apps",
+    appSelectionHeading: 'À quelles apps UppLink\npeut-il accéder ?',
+    appSelectionSubtitle:
+      "Choisissez les apps auxquelles UppLink peut accéder. Il les utilise pour enregistrer liens, notes et rappels — vous gardez le contrôle.",
     searchPlaceholder: 'Rechercher',
     connectedCount: '{selected} sur {total} connectées',
     onboarding: {
@@ -380,6 +394,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: 'ساعدني على التعرف عليك\nبشكل أفضل.',
     next: 'التالي',
     appSelectionTitle: 'اختيار التطبيقات',
+    appSelectionHeading: 'ما التطبيقات التي يمكن\nلـ UppLink الوصول إليها؟',
+    appSelectionSubtitle:
+      'اختر التطبيقات التي تسمح لـ UppLink بالوصول إليها. يستخدمها لحفظ الروابط والملاحظات والتذكيرات — وأنت تتحكم دائمًا.',
     searchPlaceholder: 'بحث',
     connectedCount: '{selected} من {total} متصلة',
     onboarding: {
@@ -452,6 +469,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: '让我更好地\n了解你。',
     next: '下一步',
     appSelectionTitle: '应用选择',
+    appSelectionHeading: 'UppLink 可以访问\n哪些应用？',
+    appSelectionSubtitle:
+      '选择你愿意让 UppLink 访问的应用。它用这些应用保存链接、笔记和提醒——你始终拥有控制权。',
     searchPlaceholder: '搜索',
     connectedCount: '已连接 {selected}/{total}',
     onboarding: {
@@ -524,6 +544,9 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
     knowYouBetterHeading: 'मुझे आपको बेहतर जानने\nमें मदद करें।',
     next: 'आगे',
     appSelectionTitle: 'ऐप चयन',
+    appSelectionHeading: 'UppLink किन ऐप्स\nतक पहुँच सकता है?',
+    appSelectionSubtitle:
+      'वे ऐप्स चुनें जिन तक आप UppLink को पहुँच देना चाहते हैं। यह इन्हें लिंक, नोट्स और रिमाइंडर सहेजने के लिए उपयोग करता है — नियंत्रण हमेशा आपके पास है।',
     searchPlaceholder: 'खोजें',
     connectedCount: '{selected}/{total} कनेक्टेड',
     onboarding: {
