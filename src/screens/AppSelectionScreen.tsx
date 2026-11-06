@@ -31,18 +31,17 @@ interface FigmaAppItem {
   id: string;
   name: string;
   icon: any;
-  defaultSelected: boolean;
 }
 
 const FIGMA_APPS: FigmaAppItem[] = [
-  { id: 'youtube', name: 'YouTube', icon: AppImages.youtube, defaultSelected: true },
-  { id: 'chrome', name: 'Chrome', icon: AppImages.chrome, defaultSelected: true },
-  { id: 'reddit', name: 'Reddit', icon: AppImages.reddit, defaultSelected: true },
-  { id: 'instagram', name: 'Instagram', icon: AppImages.instagram, defaultSelected: true },
-  { id: 'snapchat', name: 'Snapchat', icon: AppImages.snapchat, defaultSelected: true },
-  { id: 'edge', name: 'Edge', icon: AppImages.edge, defaultSelected: false },
-  { id: 'facebook', name: 'facebook', icon: AppImages.facebook, defaultSelected: true },
-  { id: 'tiktok', name: 'Tiktok', icon: AppImages.tiktok, defaultSelected: true },
+  { id: 'youtube', name: 'YouTube', icon: AppImages.youtube },
+  { id: 'chrome', name: 'Chrome', icon: AppImages.chrome },
+  { id: 'reddit', name: 'Reddit', icon: AppImages.reddit },
+  { id: 'instagram', name: 'Instagram', icon: AppImages.instagram },
+  { id: 'snapchat', name: 'Snapchat', icon: AppImages.snapchat },
+  { id: 'edge', name: 'Edge', icon: AppImages.edge },
+  { id: 'facebook', name: 'facebook', icon: AppImages.facebook },
+  { id: 'tiktok', name: 'Tiktok', icon: AppImages.tiktok },
 ];
 
 const AppRowItem: React.FC<{
@@ -109,9 +108,7 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
   const insets = useSafeAreaInsets();
   const strings = getStrings(language);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAppIds, setSelectedAppIds] = useState<string[]>(
-    FIGMA_APPS.filter((a) => a.defaultSelected).map((a) => a.id)
-  );
+  const [selectedAppIds, setSelectedAppIds] = useState<string[]>([]);
 
   const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 18;
   const bottomPadding = Math.max(insets.bottom, 20) + 12;

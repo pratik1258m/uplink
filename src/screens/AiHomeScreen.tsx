@@ -486,7 +486,7 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
     label: string;
     badge?: string;
   }[] = [
-    { key: 'savedLinks', icon: 'link', label: ai.menuItems.savedLinks, badge: '12' },
+    { key: 'savedLinks', icon: 'link', label: ai.menuItems.savedLinks },
     { key: 'reminders', icon: 'bell', label: ai.menuItems.reminders },
     { key: 'goals', icon: 'target', label: ai.menuItems.goals },
     { key: 'notes', icon: 'note', label: ai.menuItems.notes },
