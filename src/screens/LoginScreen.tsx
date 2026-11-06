@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,11 @@ import {
   Graphics1,
 } from '../assets/svgs';
 import { BouncyButton } from '../components/BouncyButton';
+import {
+  AccountPickerSheet,
+  AuthAccount,
+  AuthProvider,
+} from '../components/AccountPickerSheet';
 
 interface LoginScreenProps {
   onContinue: () => void;
@@ -24,6 +29,17 @@ interface LoginScreenProps {
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
   const insets = useSafeAreaInsets();
+  const [sheetProvider, setSheetProvider] = useState<AuthProvider | null>(null);
+  const continueTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (continueTimeout.current) {
+        clearTimeout(continueTimeout.current);
+      }
+    },
+    []
+  );
 
   // Decoupled floating animations for organic, alive physics
   const floatAnim1 = useRef(new Animated.Value(0)).current;
@@ -89,6 +105,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
       pulse.stop();
     };
   }, [floatAnim1, floatAnim2, pulseAnim]);
+
+  const handleSelectAccount = (_account: AuthAccount) => {
+    setSheetProvider(null);
+    continueTimeout.current = setTimeout(onContinue, 240);
+  };
 
   const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 12;
   const bottomPadding = Math.max(insets.bottom, 20) + 12;
@@ -162,7 +183,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
           <BouncyButton
             style={styles.googleButton}
             activeScale={0.96}
-            onPress={onContinue}>
+            onPress={() => setSheetProvider('google')}>
             <View style={styles.iconCircle}>
               <GoogleIcon width={20} height={20} />
             </View>
@@ -172,7 +193,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
           <BouncyButton
             style={styles.appleButton}
             activeScale={0.96}
-            onPress={onContinue}>
+            onPress={() => setSheetProvider('apple')}>
             <View style={styles.iconCircle}>
               <AppleIcon width={20} height={20} />
             </View>
@@ -190,6 +211,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
           <Text style={styles.ownerText}>OWNED BY KADVA KORP</Text>
         </View>
       </View>
+
+      <AccountPickerSheet
+        visible={sheetProvider !== null}
+        provider={sheetProvider ?? 'google'}
+        onClose={() => setSheetProvider(null)}
+        onSelectAccount={handleSelectAccount}
+      />
     </View>
   );
 };
