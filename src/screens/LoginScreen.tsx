@@ -24,7 +24,7 @@ import {
 } from '../components/AccountPickerSheet';
 
 interface LoginScreenProps {
-  onContinue: () => void;
+  onContinue: (accountName: string) => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
@@ -106,9 +106,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
     };
   }, [floatAnim1, floatAnim2, pulseAnim]);
 
-  const handleSelectAccount = (_account: AuthAccount) => {
+  const handleSelectAccount = (account: AuthAccount) => {
     setSheetProvider(null);
-    continueTimeout.current = setTimeout(onContinue, 240);
+    continueTimeout.current = setTimeout(() => onContinue(account.name), 240);
   };
 
   const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 12;

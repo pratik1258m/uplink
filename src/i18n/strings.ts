@@ -46,6 +46,7 @@ export interface OnboardingStrings {
 }
 
 export interface AiHomeStrings {
+  greeting: string;
   heading: string;
   savedLinks: string;
   savedLinksSubtitle: string;
@@ -57,6 +58,7 @@ export interface AiHomeStrings {
     goals: string;
     notes: string;
     apps: string;
+    account: string;
     settings: string;
     help: string;
   };
@@ -80,6 +82,11 @@ export interface AiHomeStrings {
 export interface AppStrings {
   knowYouBetterHeading: string;
   next: string;
+  nameStep: {
+    heading: string;
+    subtitle: string;
+    placeholder: string;
+  };
   appSelectionTitle: string;
   appSelectionHeading: string;
   appSelectionSubtitle: string;
@@ -93,6 +100,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   English: {
     knowYouBetterHeading: 'Help me to get to\nknow you better.',
     next: 'Next',
+    nameStep: {
+      heading: 'What can I\ncall you?',
+      subtitle:
+        'Your name comes from your account. Feel free to change it — this is how UppLink will greet you.',
+      placeholder: 'Your name',
+    },
     appSelectionTitle: 'App Selection',
     appSelectionHeading: 'Which apps can\nUppLink access?',
     appSelectionSubtitle:
@@ -134,6 +147,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: 'Hey {name}',
       heading: 'What should we\nwork on?',
       savedLinks: 'Saved links',
       savedLinksSubtitle: 'From YouTube, Chrome and Reddit',
@@ -145,6 +159,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: 'Goals',
         notes: 'Notes',
         apps: 'Connected apps',
+        account: 'Account',
         settings: 'Settings',
         help: 'Help & feedback',
       },
@@ -168,6 +183,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   Spanish: {
     knowYouBetterHeading: 'Ayúdame a conocerte\nmejor.',
     next: 'Siguiente',
+    nameStep: {
+      heading: '¿Cómo te puedo\nllamar?',
+      subtitle:
+        'Tu nombre viene de tu cuenta. Puedes cambiarlo: así te saludará UppLink.',
+      placeholder: 'Tu nombre',
+    },
     appSelectionTitle: 'Selección de apps',
     appSelectionHeading: '¿A qué apps puede\nacceder UppLink?',
     appSelectionSubtitle:
@@ -209,6 +230,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: 'Hola, {name}',
       heading: '¿En qué\nvamos a trabajar?',
       savedLinks: 'Enlaces guardados',
       savedLinksSubtitle: 'De YouTube, Chrome y Reddit',
@@ -220,6 +242,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: 'Metas',
         notes: 'Notas',
         apps: 'Apps conectadas',
+        account: 'Cuenta',
         settings: 'Ajustes',
         help: 'Ayuda y comentarios',
       },
@@ -243,6 +266,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   Italian: {
     knowYouBetterHeading: 'Aiutami a conoscerti\nmeglio.',
     next: 'Avanti',
+    nameStep: {
+      heading: 'Come posso\nchiamarti?',
+      subtitle:
+        'Il tuo nome viene dal tuo account. Puoi cambiarlo: così UppLink ti saluterà.',
+      placeholder: 'Il tuo nome',
+    },
     appSelectionTitle: 'Selezione app',
     appSelectionHeading: 'A quali app può\naccedere UppLink?',
     appSelectionSubtitle:
@@ -284,6 +313,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: 'Ciao, {name}',
       heading: 'Su cosa\nlavoriamo?',
       savedLinks: 'Link salvati',
       savedLinksSubtitle: 'Da YouTube, Chrome e Reddit',
@@ -295,6 +325,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: 'Obiettivi',
         notes: 'Note',
         apps: 'App connesse',
+        account: 'Account',
         settings: 'Impostazioni',
         help: 'Aiuto e feedback',
       },
@@ -318,6 +349,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   French: {
     knowYouBetterHeading: 'Aide-moi à mieux\nte connaître.',
     next: 'Suivant',
+    nameStep: {
+      heading: 'Comment puis-je\nt’appeler ?',
+      subtitle:
+        'Votre nom vient de votre compte. Modifiez-le librement : c’est ainsi qu’UppLink vous saluera.',
+      placeholder: 'Votre nom',
+    },
     appSelectionTitle: "Sélection d'apps",
     appSelectionHeading: 'À quelles apps UppLink\npeut-il accéder ?',
     appSelectionSubtitle:
@@ -359,6 +396,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: 'Bonjour, {name}',
       heading: 'Sur quoi\non travaille ?',
       savedLinks: 'Liens enregistrés',
       savedLinksSubtitle: 'Depuis YouTube, Chrome et Reddit',
@@ -370,6 +408,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: 'Objectifs',
         notes: 'Notes',
         apps: 'Apps connectées',
+        account: 'Compte',
         settings: 'Réglages',
         help: 'Aide et commentaires',
       },
@@ -393,6 +432,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   Arabic: {
     knowYouBetterHeading: 'ساعدني على التعرف عليك\nبشكل أفضل.',
     next: 'التالي',
+    nameStep: {
+      heading: 'بماذا يمكنني\nأن أناديك؟',
+      subtitle:
+        'اسمك مأخوذ من حسابك. يمكنك تغييره — هكذا سيرحب بك UppLink.',
+      placeholder: 'اسمك',
+    },
     appSelectionTitle: 'اختيار التطبيقات',
     appSelectionHeading: 'ما التطبيقات التي يمكن\nلـ UppLink الوصول إليها؟',
     appSelectionSubtitle:
@@ -434,6 +479,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: 'مرحبًا، {name}',
       heading: 'على ماذا\nنعمل؟',
       savedLinks: 'الروابط المحفوظة',
       savedLinksSubtitle: 'من يوتيوب وكروم وريديت',
@@ -445,6 +491,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: 'الأهداف',
         notes: 'الملاحظات',
         apps: 'التطبيقات المتصلة',
+        account: 'الحساب',
         settings: 'الإعدادات',
         help: 'المساعدة والملاحظات',
       },
@@ -468,6 +515,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   Chinese: {
     knowYouBetterHeading: '让我更好地\n了解你。',
     next: '下一步',
+    nameStep: {
+      heading: '我该怎么\n称呼你？',
+      subtitle:
+        '你的名字来自你的账户。你可以随时修改——UppLink 会这样称呼你。',
+      placeholder: '你的名字',
+    },
     appSelectionTitle: '应用选择',
     appSelectionHeading: 'UppLink 可以访问\n哪些应用？',
     appSelectionSubtitle:
@@ -509,6 +562,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: '你好，{name}',
       heading: '我们今天\n做什么？',
       savedLinks: '已保存链接',
       savedLinksSubtitle: '来自 YouTube、Chrome 和 Reddit',
@@ -520,6 +574,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: '目标',
         notes: '笔记',
         apps: '已连接应用',
+        account: '账户',
         settings: '设置',
         help: '帮助与反馈',
       },
@@ -543,6 +598,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
   Hindi: {
     knowYouBetterHeading: 'मुझे आपको बेहतर जानने\nमें मदद करें।',
     next: 'आगे',
+    nameStep: {
+      heading: 'मैं आपको क्या\nकह सकता हूँ?',
+      subtitle:
+        'आपका नाम आपके अकाउंट से लिया गया है। आप इसे बदल सकते हैं — UppLink आपको ऐसे ही बुलाएगा।',
+      placeholder: 'आपका नाम',
+    },
     appSelectionTitle: 'ऐप चयन',
     appSelectionHeading: 'UppLink किन ऐप्स\nतक पहुँच सकता है?',
     appSelectionSubtitle:
@@ -584,6 +645,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
       },
     },
     aiHome: {
+      greeting: 'नमस्ते, {name}',
       heading: 'हम किस पर\nकाम करें?',
       savedLinks: 'सहेजे गए लिंक',
       savedLinksSubtitle: 'YouTube, Chrome और Reddit से',
@@ -595,6 +657,7 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         goals: 'लक्ष्य',
         notes: 'नोट्स',
         apps: 'कनेक्टेड ऐप्स',
+        account: 'अकाउंट',
         settings: 'सेटिंग्स',
         help: 'सहायता और फ़ीडबैक',
       },

@@ -34,6 +34,7 @@ type IconName =
   | 'target'
   | 'note'
   | 'apps'
+  | 'person'
   | 'sliders'
   | 'help'
   | 'plus'
@@ -119,6 +120,15 @@ const AiIcon: React.FC<{ name: IconName; size?: number; color?: string }> = ({
           <Rect x={13.5} y={13.5} width={6.5} height={6.5} rx={1.8} {...strokeProps} />
         </>
       )}
+      {name === 'person' && (
+        <>
+          <Circle cx={12} cy={8.5} r={3.6} {...strokeProps} />
+          <Path
+            d="M4.8 20c0-3.6 3.2-6.2 7.2-6.2s7.2 2.6 7.2 6.2"
+            {...strokeProps}
+          />
+        </>
+      )}
       {name === 'sliders' && (
         <>
           <Line x1={4} y1={7.5} x2={20} y2={7.5} {...strokeProps} />
@@ -167,9 +177,13 @@ const AiIcon: React.FC<{ name: IconName; size?: number; color?: string }> = ({
 
 interface AiHomeScreenProps {
   language: SupportedLanguage;
+  userName: string;
 }
 
-export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({ language }) => {
+export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
+  language,
+  userName,
+}) => {
   const insets = useSafeAreaInsets();
   const strings = getStrings(language);
   const ai = strings.aiHome;
@@ -415,6 +429,7 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({ language }) => {
     { key: 'goals', icon: 'target', label: ai.menuItems.goals },
     { key: 'notes', icon: 'note', label: ai.menuItems.notes },
     { key: 'apps', icon: 'apps', label: ai.menuItems.apps },
+    { key: 'account', icon: 'person', label: ai.menuItems.account },
     { key: 'settings', icon: 'sliders', label: ai.menuItems.settings },
     { key: 'help', icon: 'help', label: ai.menuItems.help },
   ];
@@ -461,6 +476,12 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({ language }) => {
         </View>
 
         <View style={styles.content}>
+          {userName ? (
+            <Text style={styles.greeting} numberOfLines={1}>
+              {ai.greeting.replace('{name}', userName)}
+            </Text>
+          ) : null}
+
           <Text style={styles.heading}>{ai.heading}</Text>
 
           <View style={styles.voiceStage}>
@@ -788,6 +809,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 30,
     paddingBottom: FAB_SIZE + 14,
+  },
+  greeting: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0099C4',
+    letterSpacing: -0.2,
+    marginBottom: 6,
   },
   heading: {
     fontSize: 34,

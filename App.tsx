@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { LoginScreen } from './src/screens/LoginScreen';
+import { NameScreen } from './src/screens/NameScreen';
 import { LanguageSelectionScreen } from './src/screens/LanguageSelectionScreen';
 import { KnowYouBetterScreen } from './src/screens/KnowYouBetterScreen';
 import { KnowYouBetterQuestionsScreen } from './src/screens/KnowYouBetterQuestionsScreen';
@@ -18,6 +19,7 @@ import { SupportedLanguage } from './src/i18n/strings';
 function App() {
   const { width: screenWidth } = useWindowDimensions();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [userName, setUserName] = useState('');
   const [language, setLanguage] = useState<SupportedLanguage>('English');
   const translateX = useRef(new Animated.Value(0)).current;
 
@@ -41,56 +43,74 @@ function App() {
           style={[
             styles.sliderTrack,
             {
-              width: screenWidth * 6,
+              width: screenWidth * 7,
               transform: [{ translateX }],
             },
           ]}>
           {/* Screen 0: Login */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
-            <LoginScreen onContinue={() => navigateTo(1)} />
+            <LoginScreen
+              onContinue={accountName => {
+                setUserName(accountName);
+                navigateTo(1);
+              }}
+            />
           </View>
 
-          {/* Screen 1: Language Selection */}
+          {/* Screen 1: Name */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
-            <LanguageSelectionScreen
+            <NameScreen
+              language={language}
+              initialName={userName}
               onBack={() => navigateTo(0)}
-              onNext={(selectedLanguage) => {
-                setLanguage(selectedLanguage);
+              onNext={name => {
+                setUserName(name);
                 navigateTo(2);
               }}
             />
           </View>
 
-          {/* Screen 2: Know You Better */}
+          {/* Screen 2: Language Selection */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
-            <KnowYouBetterScreen
-              language={language}
+            <LanguageSelectionScreen
               onBack={() => navigateTo(1)}
-              onNext={() => navigateTo(3)}
+              onNext={(selectedLanguage) => {
+                setLanguage(selectedLanguage);
+                navigateTo(3);
+              }}
             />
           </View>
 
-          {/* Screen 3: Know You Better Questions */}
+          {/* Screen 3: Know You Better */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
-            <KnowYouBetterQuestionsScreen
+            <KnowYouBetterScreen
               language={language}
               onBack={() => navigateTo(2)}
               onNext={() => navigateTo(4)}
             />
           </View>
 
-          {/* Screen 4: App Selection */}
+          {/* Screen 4: Know You Better Questions */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
-            <AppSelectionScreen
+            <KnowYouBetterQuestionsScreen
               language={language}
               onBack={() => navigateTo(3)}
-              onFinish={() => navigateTo(5)}
+              onNext={() => navigateTo(5)}
             />
           </View>
 
-          {/* Screen 5: AI Home */}
+          {/* Screen 5: App Selection */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
-            <AiHomeScreen language={language} />
+            <AppSelectionScreen
+              language={language}
+              onBack={() => navigateTo(4)}
+              onFinish={() => navigateTo(6)}
+            />
+          </View>
+
+          {/* Screen 6: AI Home */}
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
+            <AiHomeScreen language={language} userName={userName} />
           </View>
         </Animated.View>
       </View>
