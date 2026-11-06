@@ -12,6 +12,7 @@ import { LanguageSelectionScreen } from './src/screens/LanguageSelectionScreen';
 import { KnowYouBetterScreen } from './src/screens/KnowYouBetterScreen';
 import { KnowYouBetterQuestionsScreen } from './src/screens/KnowYouBetterQuestionsScreen';
 import { AppSelectionScreen } from './src/screens/AppSelectionScreen';
+import { AiHomeScreen } from './src/screens/AiHomeScreen';
 import { SupportedLanguage } from './src/i18n/strings';
 
 function App() {
@@ -40,7 +41,7 @@ function App() {
           style={[
             styles.sliderTrack,
             {
-              width: screenWidth * 5,
+              width: screenWidth * 6,
               transform: [{ translateX }],
             },
           ]}>
@@ -83,8 +84,13 @@ function App() {
             <AppSelectionScreen
               language={language}
               onBack={() => navigateTo(3)}
-              onFinish={() => navigateTo(0)}
+              onFinish={() => navigateTo(5)}
             />
+          </View>
+
+          {/* Screen 5: AI Home */}
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
+            <AiHomeScreen language={language} />
           </View>
         </Animated.View>
       </View>

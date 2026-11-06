@@ -45,6 +45,23 @@ export interface OnboardingStrings {
   };
 }
 
+export interface AiHomeStrings {
+  heading: string;
+  savedLinks: string;
+  savedLinksSubtitle: string;
+  askPlaceholder: string;
+  menuTitle: string;
+  menuItems: {
+    savedLinks: string;
+    reminders: string;
+    goals: string;
+    notes: string;
+    apps: string;
+    settings: string;
+    help: string;
+  };
+}
+
 export interface AppStrings {
   knowYouBetterHeading: string;
   next: string;
@@ -52,6 +69,7 @@ export interface AppStrings {
   searchPlaceholder: string;
   connectedCount: string;
   onboarding: OnboardingStrings;
+  aiHome: AiHomeStrings;
 }
 
 export const STRINGS: Record<SupportedLanguage, AppStrings> = {
@@ -95,6 +113,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         detailed: 'Detailed explanations',
       },
     },
+    aiHome: {
+      heading: 'What should we\nwork on?',
+      savedLinks: 'Saved links',
+      savedLinksSubtitle: 'From YouTube, Chrome and Reddit',
+      askPlaceholder: 'Ask UppLink…',
+      menuTitle: 'More',
+      menuItems: {
+        savedLinks: 'Saved links',
+        reminders: 'Reminders',
+        goals: 'Goals',
+        notes: 'Notes',
+        apps: 'Connected apps',
+        settings: 'Settings',
+        help: 'Help & feedback',
+      },
+    },
   },
   Spanish: {
     knowYouBetterHeading: 'Ayúdame a conocerte\nmejor.',
@@ -134,6 +168,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         direct: 'Breve y directo',
         friendly: 'Amigable',
         detailed: 'Explicaciones detalladas',
+      },
+    },
+    aiHome: {
+      heading: '¿En qué\nvamos a trabajar?',
+      savedLinks: 'Enlaces guardados',
+      savedLinksSubtitle: 'De YouTube, Chrome y Reddit',
+      askPlaceholder: 'Pregúntale a UppLink…',
+      menuTitle: 'Más',
+      menuItems: {
+        savedLinks: 'Enlaces guardados',
+        reminders: 'Recordatorios',
+        goals: 'Metas',
+        notes: 'Notas',
+        apps: 'Apps conectadas',
+        settings: 'Ajustes',
+        help: 'Ayuda y comentarios',
       },
     },
   },
@@ -177,6 +227,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         detailed: 'Spiegazioni dettagliate',
       },
     },
+    aiHome: {
+      heading: 'Su cosa\nlavoriamo?',
+      savedLinks: 'Link salvati',
+      savedLinksSubtitle: 'Da YouTube, Chrome e Reddit',
+      askPlaceholder: 'Chiedi a UppLink…',
+      menuTitle: 'Altro',
+      menuItems: {
+        savedLinks: 'Link salvati',
+        reminders: 'Promemoria',
+        goals: 'Obiettivi',
+        notes: 'Note',
+        apps: 'App connesse',
+        settings: 'Impostazioni',
+        help: 'Aiuto e feedback',
+      },
+    },
   },
   French: {
     knowYouBetterHeading: 'Aide-moi à mieux\nte connaître.',
@@ -216,6 +282,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         direct: 'Court et direct',
         friendly: 'Amical',
         detailed: 'Explications détaillées',
+      },
+    },
+    aiHome: {
+      heading: 'Sur quoi\non travaille ?',
+      savedLinks: 'Liens enregistrés',
+      savedLinksSubtitle: 'Depuis YouTube, Chrome et Reddit',
+      askPlaceholder: 'Demande à UppLink…',
+      menuTitle: 'Plus',
+      menuItems: {
+        savedLinks: 'Liens enregistrés',
+        reminders: 'Rappels',
+        goals: 'Objectifs',
+        notes: 'Notes',
+        apps: 'Apps connectées',
+        settings: 'Réglages',
+        help: 'Aide et commentaires',
       },
     },
   },
@@ -259,6 +341,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         detailed: 'شروحات مفصلة',
       },
     },
+    aiHome: {
+      heading: 'على ماذا\nنعمل؟',
+      savedLinks: 'الروابط المحفوظة',
+      savedLinksSubtitle: 'من يوتيوب وكروم وريديت',
+      askPlaceholder: 'اسأل UppLink…',
+      menuTitle: 'المزيد',
+      menuItems: {
+        savedLinks: 'الروابط المحفوظة',
+        reminders: 'التذكيرات',
+        goals: 'الأهداف',
+        notes: 'الملاحظات',
+        apps: 'التطبيقات المتصلة',
+        settings: 'الإعدادات',
+        help: 'المساعدة والملاحظات',
+      },
+    },
   },
   Chinese: {
     knowYouBetterHeading: '让我更好地\n了解你。',
@@ -300,6 +398,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         detailed: '详细解释',
       },
     },
+    aiHome: {
+      heading: '我们今天\n做什么？',
+      savedLinks: '已保存链接',
+      savedLinksSubtitle: '来自 YouTube、Chrome 和 Reddit',
+      askPlaceholder: '问问 UppLink…',
+      menuTitle: '更多',
+      menuItems: {
+        savedLinks: '已保存链接',
+        reminders: '提醒',
+        goals: '目标',
+        notes: '笔记',
+        apps: '已连接应用',
+        settings: '设置',
+        help: '帮助与反馈',
+      },
+    },
   },
   Hindi: {
     knowYouBetterHeading: 'मुझे आपको बेहतर जानने\nमें मदद करें।',
@@ -339,6 +453,22 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         direct: 'संक्षिप्त और स्पष्ट',
         friendly: 'मैत्रीपूर्ण',
         detailed: 'विस्तृत जानकारी',
+      },
+    },
+    aiHome: {
+      heading: 'हम किस पर\nकाम करें?',
+      savedLinks: 'सहेजे गए लिंक',
+      savedLinksSubtitle: 'YouTube, Chrome और Reddit से',
+      askPlaceholder: 'UppLink से पूछें…',
+      menuTitle: 'और',
+      menuItems: {
+        savedLinks: 'सहेजे गए लिंक',
+        reminders: 'रिमाइंडर',
+        goals: 'लक्ष्य',
+        notes: 'नोट्स',
+        apps: 'कनेक्टेड ऐप्स',
+        settings: 'सेटिंग्स',
+        help: 'सहायता और फ़ीडबैक',
       },
     },
   },

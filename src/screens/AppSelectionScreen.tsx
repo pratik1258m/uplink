@@ -181,6 +181,7 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
 
       {/* App List */}
       <ScrollView
+        style={styles.listScroll}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}>
         {filteredApps.map((item, index) => (
@@ -193,6 +194,16 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
           />
         ))}
       </ScrollView>
+
+      {/* Continue to AI Home */}
+      <View style={styles.footer}>
+        <BouncyButton
+          style={styles.nextButton}
+          activeScale={0.96}
+          onPress={() => onFinish?.(selectedAppIds)}>
+          <Text style={styles.nextButtonText}>{strings.next}</Text>
+        </BouncyButton>
+      </View>
     </View>
   );
 };
@@ -285,6 +296,9 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontWeight: '500',
   },
+  listScroll: {
+    flex: 1,
+  },
   listContent: {
     paddingHorizontal: 20,
     paddingTop: 4,
@@ -325,5 +339,27 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#F0F0F2',
     marginLeft: 58,
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+  },
+  nextButton: {
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: '#02B8FE',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#02D1FE',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  nextButtonText: {
+    fontSize: 19,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
 });
