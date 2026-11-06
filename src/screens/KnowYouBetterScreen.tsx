@@ -10,17 +10,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GridBackground } from '../components/GridBackground';
 import { GlowingSphere } from '../components/GlowingSphere';
 import { BouncyButton } from '../components/BouncyButton';
+import { getStrings, SupportedLanguage } from '../i18n/strings';
 
 interface KnowYouBetterScreenProps {
+  language: SupportedLanguage;
   onBack: () => void;
   onNext: () => void;
 }
 
 export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
+  language,
   onBack,
   onNext,
 }) => {
   const insets = useSafeAreaInsets();
+  const strings = getStrings(language);
 
   const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 18;
   const bottomPadding = Math.max(insets.bottom, 20) + 12;
@@ -54,7 +58,7 @@ export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
         {/* Clean, Majestic Figma Headline */}
         <View style={styles.titleWrapper}>
           <Text style={styles.mainHeading}>
-            Help me to get to{'\n'}know you better.
+            {strings.knowYouBetterHeading}
           </Text>
         </View>
       </View>
@@ -65,7 +69,7 @@ export const KnowYouBetterScreen: React.FC<KnowYouBetterScreenProps> = ({
           style={styles.nextButton}
           activeScale={0.96}
           onPress={onNext}>
-          <Text style={styles.nextButtonText}>Next</Text>
+          <Text style={styles.nextButtonText}>{strings.next}</Text>
         </BouncyButton>
       </View>
     </View>

@@ -11,10 +11,12 @@ import { LoginScreen } from './src/screens/LoginScreen';
 import { LanguageSelectionScreen } from './src/screens/LanguageSelectionScreen';
 import { KnowYouBetterScreen } from './src/screens/KnowYouBetterScreen';
 import { AppSelectionScreen } from './src/screens/AppSelectionScreen';
+import { SupportedLanguage } from './src/i18n/strings';
 
 function App() {
   const { width: screenWidth } = useWindowDimensions();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [language, setLanguage] = useState<SupportedLanguage>('English');
   const translateX = useRef(new Animated.Value(0)).current;
 
   const navigateTo = (index: number) => {
@@ -50,13 +52,17 @@ function App() {
           <View style={[styles.screenSlide, { width: screenWidth }]}>
             <LanguageSelectionScreen
               onBack={() => navigateTo(0)}
-              onNext={() => navigateTo(2)}
+              onNext={(selectedLanguage) => {
+                setLanguage(selectedLanguage);
+                navigateTo(2);
+              }}
             />
           </View>
 
           {/* Screen 2: Know You Better */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
             <KnowYouBetterScreen
+              language={language}
               onBack={() => navigateTo(1)}
               onNext={() => navigateTo(3)}
             />
@@ -65,6 +71,7 @@ function App() {
           {/* Screen 3: App Selection */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
             <AppSelectionScreen
+              language={language}
               onBack={() => navigateTo(2)}
               onFinish={() => navigateTo(0)}
             />

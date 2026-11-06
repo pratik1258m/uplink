@@ -11,35 +11,32 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GridBackground } from '../components/GridBackground';
 import { GlowingSphere } from '../components/GlowingSphere';
 import { BouncyButton } from '../components/BouncyButton';
+import {
+  SUPPORTED_LANGUAGES,
+  SupportedLanguage,
+} from '../i18n/strings';
 
 interface LanguageSelectionScreenProps {
   onBack: () => void;
-  onNext: (selectedLanguage: string) => void;
+  onNext: (selectedLanguage: SupportedLanguage) => void;
 }
 
-const AVAILABLE_LANGUAGES = [
-  'English',
-  'Spanish',
-  'Italian',
-  'French',
-  'Arabic',
-  'Chinese',
-  'Hindi',
-];
+const AVAILABLE_LANGUAGES = SUPPORTED_LANGUAGES;
 
 export const LanguageSelectionScreen: React.FC<LanguageSelectionScreenProps> = ({
   onBack,
   onNext,
 }) => {
   const insets = useSafeAreaInsets();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<SupportedLanguage>('English');
   const titleAnim = useRef(new Animated.Value(1)).current;
 
   // Safe area metrics accounting for Android camera notches & punch holes
   const topPadding = Math.max(insets.top, StatusBar.currentHeight || 0, 24) + 18;
   const bottomPadding = Math.max(insets.bottom, 20) + 12;
 
-  const handleSelectLanguage = (lang: string) => {
+  const handleSelectLanguage = (lang: SupportedLanguage) => {
     if (lang === selectedLanguage) return;
     // Bouncy pop animation for the selected language text
     Animated.sequence([

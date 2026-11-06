@@ -15,8 +15,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppImages } from '../assets/images';
 import { RadioSelected, RadioUnselected, SearchIcon } from '../assets/svgs';
 import { BouncyButton } from '../components/BouncyButton';
+import {
+  formatCount,
+  getStrings,
+  SupportedLanguage,
+} from '../i18n/strings';
 
 interface AppSelectionScreenProps {
+  language: SupportedLanguage;
   onBack: () => void;
   onFinish?: (selectedApps: string[]) => void;
 }
@@ -98,10 +104,12 @@ const AppRowItem: React.FC<{
 };
 
 export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
+  language,
   onBack,
   onFinish,
 }) => {
   const insets = useSafeAreaInsets();
+  const strings = getStrings(language);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAppIds, setSelectedAppIds] = useState<string[]>(
     FIGMA_APPS.filter((a) => a.defaultSelected).map((a) => a.id)
@@ -133,7 +141,7 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
           <Text style={styles.backArrow}>‹</Text>
         </BouncyButton>
 
-        <Text style={styles.headerTitle}>App Selection</Text>
+        <Text style={styles.headerTitle}>{strings.appSelectionTitle}</Text>
 
         <View style={styles.headerPlaceholder} />
       </View>
@@ -144,7 +152,7 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
           <SearchIcon width={18} height={18} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search "
+            placeholder={strings.searchPlaceholder}
             placeholderTextColor="#7C7C7C"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -162,7 +170,11 @@ export const AppSelectionScreen: React.FC<AppSelectionScreenProps> = ({
         {/* Dynamic Selection Indicator */}
         <View style={styles.counterRow}>
           <Text style={styles.counterText}>
-            {selectedAppIds.length} of {FIGMA_APPS.length} connected
+            {formatCount(
+              strings.connectedCount,
+              selectedAppIds.length,
+              FIGMA_APPS.length
+            )}
           </Text>
         </View>
       </View>
