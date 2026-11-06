@@ -389,7 +389,7 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
         }
       : {
           x: clampX(canvasWidth - 20 - FAB_SIZE),
-          y: clampY(canvasHeight - bottomPadding - 72 - FAB_SIZE),
+          y: clampY((canvasHeight - FAB_SIZE) / 2),
         };
 
     if (next.x !== fabPosRef.current.x || next.y !== fabPosRef.current.y) {
