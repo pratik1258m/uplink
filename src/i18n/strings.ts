@@ -60,6 +60,21 @@ export interface AiHomeStrings {
     settings: string;
     help: string;
   };
+  fab: {
+    toggleLabel: string;
+    quickSave: string;
+    notes: string;
+    audioNote: string;
+    videoNote: string;
+    tools: string;
+    share: string;
+  };
+  voice: {
+    hint: string;
+    tapToSpeak: string;
+    listening: string;
+    thinking: string;
+  };
 }
 
 export interface AppStrings {
@@ -128,6 +143,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         settings: 'Settings',
         help: 'Help & feedback',
       },
+      fab: {
+        toggleLabel: 'Floating button',
+        quickSave: 'Quick Save',
+        notes: 'Notes',
+        audioNote: 'Audio Note',
+        videoNote: 'Video Note',
+        tools: 'Tools',
+        share: 'Share',
+      },
+      voice: {
+        hint: 'Ask by voice or type',
+        tapToSpeak: 'Tap to speak',
+        listening: 'Listening…',
+        thinking: 'Got it — thinking…',
+      },
     },
   },
   Spanish: {
@@ -184,6 +214,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         apps: 'Apps conectadas',
         settings: 'Ajustes',
         help: 'Ayuda y comentarios',
+      },
+      fab: {
+        toggleLabel: 'Botón flotante',
+        quickSave: 'Guardado rápido',
+        notes: 'Notas',
+        audioNote: 'Nota de audio',
+        videoNote: 'Nota de vídeo',
+        tools: 'Herramientas',
+        share: 'Compartir',
+      },
+      voice: {
+        hint: 'Pregunta por voz o escribe',
+        tapToSpeak: 'Toca para hablar',
+        listening: 'Escuchando…',
+        thinking: 'Entendido, pensando…',
       },
     },
   },
@@ -242,6 +287,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         settings: 'Impostazioni',
         help: 'Aiuto e feedback',
       },
+      fab: {
+        toggleLabel: 'Pulsante flottante',
+        quickSave: 'Salvataggio rapido',
+        notes: 'Note',
+        audioNote: 'Nota audio',
+        videoNote: 'Nota video',
+        tools: 'Strumenti',
+        share: 'Condividi',
+      },
+      voice: {
+        hint: 'Chiedi a voce o scrivi',
+        tapToSpeak: 'Tocca per parlare',
+        listening: 'In ascolto…',
+        thinking: 'Ricevuto, sto pensando…',
+      },
     },
   },
   French: {
@@ -298,6 +358,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         apps: 'Apps connectées',
         settings: 'Réglages',
         help: 'Aide et commentaires',
+      },
+      fab: {
+        toggleLabel: 'Bouton flottant',
+        quickSave: 'Enregistrement rapide',
+        notes: 'Notes',
+        audioNote: 'Note audio',
+        videoNote: 'Note vidéo',
+        tools: 'Outils',
+        share: 'Partager',
+      },
+      voice: {
+        hint: 'Demandez à la voix ou écrivez',
+        tapToSpeak: 'Appuyez pour parler',
+        listening: 'Écoute…',
+        thinking: 'Compris, je réfléchis…',
       },
     },
   },
@@ -356,6 +431,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         settings: 'الإعدادات',
         help: 'المساعدة والملاحظات',
       },
+      fab: {
+        toggleLabel: 'زر عائم',
+        quickSave: 'حفظ سريع',
+        notes: 'ملاحظات',
+        audioNote: 'ملاحظة صوتية',
+        videoNote: 'ملاحظة فيديو',
+        tools: 'أدوات',
+        share: 'مشاركة',
+      },
+      voice: {
+        hint: 'اسأل بالصوت أو اكتب',
+        tapToSpeak: 'اضغط للتحدث',
+        listening: 'جارٍ الاستماع…',
+        thinking: 'فهمت، أفكر…',
+      },
     },
   },
   Chinese: {
@@ -413,6 +503,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         settings: '设置',
         help: '帮助与反馈',
       },
+      fab: {
+        toggleLabel: '悬浮按钮',
+        quickSave: '快速保存',
+        notes: '笔记',
+        audioNote: '语音笔记',
+        videoNote: '视频笔记',
+        tools: '工具',
+        share: '分享',
+      },
+      voice: {
+        hint: '用语音提问或输入',
+        tapToSpeak: '点击说话',
+        listening: '正在聆听…',
+        thinking: '明白了，正在思考…',
+      },
     },
   },
   Hindi: {
@@ -469,6 +574,21 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         apps: 'कनेक्टेड ऐप्स',
         settings: 'सेटिंग्स',
         help: 'सहायता और फ़ीडबैक',
+      },
+      fab: {
+        toggleLabel: 'फ़्लोटिंग बटन',
+        quickSave: 'त्वरित सहेजें',
+        notes: 'नोट्स',
+        audioNote: 'ऑडियो नोट',
+        videoNote: 'वीडियो नोट',
+        tools: 'टूल्स',
+        share: 'शेयर करें',
+      },
+      voice: {
+        hint: 'आवाज़ से पूछें या लिखें',
+        tapToSpeak: 'बोलने के लिए टैप करें',
+        listening: 'सुन रहा है…',
+        thinking: 'समझ गया, सोच रहा हूँ…',
       },
     },
   },
