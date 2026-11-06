@@ -40,7 +40,11 @@ type IconName =
   | 'plus'
   | 'bookmark'
   | 'video'
-  | 'share';
+  | 'share'
+  | 'clip'
+  | 'image'
+  | 'camera'
+  | 'file';
 
 const AiIcon: React.FC<{ name: IconName; size?: number; color?: string }> = ({
   name,
@@ -144,6 +148,40 @@ const AiIcon: React.FC<{ name: IconName; size?: number; color?: string }> = ({
           <Circle cx={12} cy={17} r={0.9} fill={color} />
         </>
       )}
+      {name === 'clip' && (
+        <Path
+          d="M20.2 11.4l-7.8 7.8a5 5 0 01-7.1-7.1l8-8a3.4 3.4 0 014.8 4.8l-7.9 7.9a1.8 1.8 0 01-2.5-2.5l7.2-7.2"
+          {...strokeProps}
+        />
+      )}
+      {name === 'image' && (
+        <>
+          <Rect x={3.5} y={4.5} width={17} height={15} rx={3} {...strokeProps} />
+          <Circle cx={8.8} cy={9.8} r={1.6} {...strokeProps} />
+          <Path
+            d="M5.5 17l4.2-4a1.9 1.9 0 012.6 0l2 1.9 1.5-1.4a1.9 1.9 0 012.6 0l1.6 1.5"
+            {...strokeProps}
+          />
+        </>
+      )}
+      {name === 'camera' && (
+        <>
+          <Path
+            d="M4.6 8.4h2.5l1.3-2.1h7.2l1.3 2.1h2.5a2 2 0 012 2v7.1a2 2 0 01-2 2H4.6a2 2 0 01-2-2v-7.1a2 2 0 012-2z"
+            {...strokeProps}
+          />
+          <Circle cx={12} cy={13.7} r={3.3} {...strokeProps} />
+        </>
+      )}
+      {name === 'file' && (
+        <>
+          <Path
+            d="M13.4 3.5H7.6A1.6 1.6 0 006 5.1v13.8a1.6 1.6 0 001.6 1.6h8.8a1.6 1.6 0 001.6-1.6V8.1l-4.6-4.6z"
+            {...strokeProps}
+          />
+          <Path d="M13.4 3.5V8h4.6" {...strokeProps} />
+        </>
+      )}
       {name === 'plus' && (
         <>
           <Line x1={12} y1={5} x2={12} y2={19} {...strokeProps} />
@@ -190,7 +228,9 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
 
   const [message, setMessage] = useState('');
   const [inputFocused, setInputFocused] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [attachVisible, setAttachVisible] = useState(false);
   const [fabEnabled, setFabEnabled] = useState(true);
   const [fabOpen, setFabOpen] = useState(false);
   const [listening, setListening] = useState(false);
@@ -200,7 +240,29 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
   const wave = useRef(new Animated.Value(0)).current;
   const listenProgress = useRef(new Animated.Value(0)).current;
   const orbScale = useRef(new Animated.Value(1)).current;
+  const orbCollapse = useRef(new Animated.Value(0)).current;
   const thinkTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', event =>
+      setKeyboardHeight(event.endCoordinates.height)
+    );
+    const hide = Keyboard.addListener('keyboardDidHide', () =>
+      setKeyboardHeight(0)
+    );
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    Animated.timing(orbCollapse, {
+      toValue: keyboardHeight > 0 ? 1 : 0,
+      duration: 220,
+      useNativeDriver: false,
+    }).start();
+  }, [keyboardHeight, orbCollapse]);
 
   useEffect(() => {
     Animated.spring(fabProgress, {
@@ -434,6 +496,12 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
     { key: 'help', icon: 'help', label: ai.menuItems.help },
   ];
 
+  const attachItems: { key: string; icon: IconName; label: string }[] = [
+    { key: 'photos', icon: 'image', label: ai.attach.photos },
+    { key: 'camera', icon: 'camera', label: ai.attach.camera },
+    { key: 'files', icon: 'file', label: ai.attach.files },
+  ];
+
   const fabActions: { key: string; icon: IconName; label: string }[] = [
     { key: 'quickSave', icon: 'bookmark', label: ai.fab.quickSave },
     { key: 'notes', icon: 'note', label: ai.fab.notes },
@@ -485,10 +553,25 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
           <Text style={styles.heading}>{ai.heading}</Text>
 
           <View style={styles.voiceStage}>
-            <Animated.View style={{ transform: [{ scale: orbScale }] }}>
-              <BouncyButton activeScale={0.96} onPress={toggleListening}>
-                <GlowingSphere size={150} />
-              </BouncyButton>
+            <Animated.View
+              style={[
+                styles.orbWrap,
+                {
+                  height: orbCollapse.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [248, 0],
+                  }),
+                  opacity: orbCollapse.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+                },
+              ]}>
+              <Animated.View style={{ transform: [{ scale: orbScale }] }}>
+                <BouncyButton activeScale={0.96} onPress={toggleListening}>
+                  <GlowingSphere size={150} />
+                </BouncyButton>
+              </Animated.View>
             </Animated.View>
 
             <View style={styles.waveRow}>
@@ -540,7 +623,12 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
           style={[
             styles.dock,
             inputFocused && styles.dockFocused,
-            { marginBottom: bottomPadding },
+            {
+              marginBottom:
+                Platform.OS === 'android' && keyboardHeight > 0
+                  ? keyboardHeight + 20
+                  : bottomPadding,
+            },
           ]}>
           <TextInput
             ref={inputRef}
@@ -552,12 +640,23 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
             onFocus={() => {
               setInputFocused(true);
               setListening(false);
+              setFabOpen(false);
             }}
             onBlur={() => setInputFocused(false)}
             autoCorrect={false}
             returnKeyType="send"
             onSubmitEditing={handleSend}
           />
+
+          <BouncyButton
+            style={styles.clipButton}
+            activeScale={0.9}
+            onPress={() => {
+              Keyboard.dismiss();
+              setAttachVisible(true);
+            }}>
+            <AiIcon name="clip" size={20} color="#5C6670" />
+          </BouncyButton>
 
           <BouncyButton
             style={styles.micButton}
@@ -575,7 +674,7 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
         </View>
       </View>
 
-      {fabEnabled && fabReady && (
+      {fabEnabled && fabReady && keyboardHeight === 0 && (
         <>
           {fabOpen && (
             <Pressable
@@ -655,6 +754,14 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
         items={menuItems}
         onClose={() => setMenuVisible(false)}
       />
+
+      <AiMenuSheet
+        visible={attachVisible}
+        language={language}
+        subtitle={ai.attach.title}
+        items={attachItems}
+        onClose={() => setAttachVisible(false)}
+      />
     </KeyboardAvoidingView>
   );
 };
@@ -662,9 +769,10 @@ export const AiHomeScreen: React.FC<AiHomeScreenProps> = ({
 const AiMenuSheet: React.FC<{
   visible: boolean;
   language: SupportedLanguage;
+  subtitle?: string;
   items: { key: string; icon: IconName; label: string; badge?: string }[];
   onClose: () => void;
-}> = ({ visible, language, items, onClose }) => {
+}> = ({ visible, language, subtitle, items, onClose }) => {
   const insets = useSafeAreaInsets();
   const ai = getStrings(language).aiHome;
   const [mounted, setMounted] = useState(false);
@@ -731,7 +839,9 @@ const AiMenuSheet: React.FC<{
             <UpplinkLogo width={30} height={30} />
             <View style={styles.sheetHeaderText}>
               <Text style={styles.sheetTitle}>UppLink AI</Text>
-              <Text style={styles.sheetSubtitle}>{ai.menuTitle}</Text>
+              <Text style={styles.sheetSubtitle}>
+                {subtitle ?? ai.menuTitle}
+              </Text>
             </View>
           </View>
 
@@ -830,6 +940,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
   },
+  orbWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
   waveRow: {
     height: 22,
     marginTop: 18,
@@ -905,6 +1020,13 @@ const styles = StyleSheet.create({
     color: '#111111',
     paddingVertical: 0,
     paddingRight: 10,
+  },
+  clipButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   micButton: {
     width: 40,

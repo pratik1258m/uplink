@@ -77,6 +77,12 @@ export interface AiHomeStrings {
     listening: string;
     thinking: string;
   };
+  attach: {
+    title: string;
+    photos: string;
+    camera: string;
+    files: string;
+  };
 }
 
 export interface AppStrings {
@@ -178,6 +184,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         listening: 'Listening…',
         thinking: 'Got it — thinking…',
       },
+      attach: {
+        title: 'Add media',
+        photos: 'Photos',
+        camera: 'Camera',
+        files: 'Files',
+      },
     },
   },
   Spanish: {
@@ -260,6 +272,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         tapToSpeak: 'Toca para hablar',
         listening: 'Escuchando…',
         thinking: 'Entendido, pensando…',
+      },
+      attach: {
+        title: 'Añadir contenido',
+        photos: 'Fotos',
+        camera: 'Cámara',
+        files: 'Archivos',
       },
     },
   },
@@ -344,6 +362,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         listening: 'In ascolto…',
         thinking: 'Ricevuto, sto pensando…',
       },
+      attach: {
+        title: 'Aggiungi contenuto',
+        photos: 'Foto',
+        camera: 'Fotocamera',
+        files: 'File',
+      },
     },
   },
   French: {
@@ -426,6 +450,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         tapToSpeak: 'Appuyez pour parler',
         listening: 'Écoute…',
         thinking: 'Compris, je réfléchis…',
+      },
+      attach: {
+        title: 'Ajouter un média',
+        photos: 'Photos',
+        camera: 'Appareil photo',
+        files: 'Fichiers',
       },
     },
   },
@@ -510,6 +540,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         listening: 'جارٍ الاستماع…',
         thinking: 'فهمت، أفكر…',
       },
+      attach: {
+        title: 'إضافة وسائط',
+        photos: 'الصور',
+        camera: 'الكاميرا',
+        files: 'الملفات',
+      },
     },
   },
   Chinese: {
@@ -593,6 +629,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         listening: '正在聆听…',
         thinking: '明白了，正在思考…',
       },
+      attach: {
+        title: '添加媒体',
+        photos: '照片',
+        camera: '相机',
+        files: '文件',
+      },
     },
   },
   Hindi: {
@@ -675,6 +717,12 @@ export const STRINGS: Record<SupportedLanguage, AppStrings> = {
         tapToSpeak: 'बोलने के लिए टैप करें',
         listening: 'सुन रहा है…',
         thinking: 'समझ गया, सोच रहा हूँ…',
+      },
+      attach: {
+        title: 'मीडिया जोड़ें',
+        photos: 'फ़ोटो',
+        camera: 'कैमरा',
+        files: 'फ़ाइलें',
       },
     },
   },
