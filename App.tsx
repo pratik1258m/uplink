@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { LanguageSelectionScreen } from './src/screens/LanguageSelectionScreen';
 import { KnowYouBetterScreen } from './src/screens/KnowYouBetterScreen';
+import { KnowYouBetterQuestionsScreen } from './src/screens/KnowYouBetterQuestionsScreen';
 import { AppSelectionScreen } from './src/screens/AppSelectionScreen';
 import { SupportedLanguage } from './src/i18n/strings';
 
@@ -39,7 +40,7 @@ function App() {
           style={[
             styles.sliderTrack,
             {
-              width: screenWidth * 4,
+              width: screenWidth * 5,
               transform: [{ translateX }],
             },
           ]}>
@@ -68,11 +69,20 @@ function App() {
             />
           </View>
 
-          {/* Screen 3: App Selection */}
+          {/* Screen 3: Know You Better Questions */}
+          <View style={[styles.screenSlide, { width: screenWidth }]}>
+            <KnowYouBetterQuestionsScreen
+              language={language}
+              onBack={() => navigateTo(2)}
+              onNext={() => navigateTo(4)}
+            />
+          </View>
+
+          {/* Screen 4: App Selection */}
           <View style={[styles.screenSlide, { width: screenWidth }]}>
             <AppSelectionScreen
               language={language}
-              onBack={() => navigateTo(2)}
+              onBack={() => navigateTo(3)}
               onFinish={() => navigateTo(0)}
             />
           </View>
